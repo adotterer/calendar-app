@@ -1,9 +1,13 @@
-import Calendar from "..";
+import CalendarComponent from "..";
+import Calendar from "@/lib/Calendar";
 
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 
 describe("Calendar class", () => {
-  test("Should take in a Date and hav", () => {
-    const {} = render(<Calendar />);
+  test("Should display this month's calendar by default", () => {
+    const today = new Calendar(new Date());
+    const title = `${today.monLabel} ${today.year}`;
+    const { getByText } = render(<CalendarComponent />);
+    expect(getByText(title));
   });
 });
