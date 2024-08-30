@@ -1,7 +1,7 @@
 import CalendarComponent from "..";
 import Calendar from "@/lib/Calendar";
 
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 
 describe("Calendar class", () => {
   test("Should display this month's calendar by default", () => {
