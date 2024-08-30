@@ -13,7 +13,7 @@ export default function CalendarComponent() {
   return (
     <div>
       <div className="flex justify-center text-center border-solid border-2 border-indigo-600">
-        <h3 className="block">
+        <h3>
           {calendar.monLabel} {calendar.year}
         </h3>
       </div>
