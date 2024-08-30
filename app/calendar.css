@@ -1,0 +1,6 @@
+#calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px; /* Adjust the gap between the grid items as needed */
+  padding: 16px; /* Optional: Add some padding around the calendar */
+}

@@ -1,10 +1,7 @@
 {
   "parserOptions": {
-    "ecmaVersion": 2019,
-    "sourceType": "module",
     "ecmaFeatures": {
-      "jsx": true,
-      "tsx": true
+      "jsx": true
     }
   },
   "extends": "next/core-web-vitals",
