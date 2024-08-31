@@ -18,6 +18,23 @@ export default function CalendarComponent() {
         </h3>
       </div>
       <div id="calendar" className="flex flex-wrap">
+        <div className="flex justify-center">SUN</div>
+        <div className="flex justify-center">MON</div>
+        <div className="flex justify-center">TUS</div>
+        <div className="flex justify-center">WED</div>
+        <div className="flex justify-center">THU</div>
+        <div className="flex justify-center">FRI</div>
+        <div className="flex justify-center">SAT</div>
+        {Array.from({ length: calendar.monthStartsThisDay }, (_, i) => i).map(
+          (_, i) => {
+            return (
+              <div
+                key={calendar.mon + i}
+                className="h-12 w-12 border-solid border-2 border-sky-50"
+              ></div>
+            );
+          }
+        )}
         {daysArray.map((day) => (
           <div
             className="h-12 w-12 border-solid border-2 border-indigo-600"
