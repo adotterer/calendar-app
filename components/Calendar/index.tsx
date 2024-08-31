@@ -3,8 +3,14 @@ import { useState } from "react";
 
 import Calendar from "@/lib/Calendar";
 
-export default function CalendarComponent() {
-  const [calendar] = useState(new Calendar(new Date()));
+interface CalendarComponentProps {
+  date?: Date;
+}
+
+export default function CalendarComponent({
+  date = new Date(),
+}: CalendarComponentProps) {
+  const [calendar] = useState(new Calendar(date));
   const daysArray = Array.from(
     { length: calendar.numOfDaysInMonth },
     (_, i) => i + 1
@@ -13,9 +19,11 @@ export default function CalendarComponent() {
   return (
     <div>
       <div className="flex justify-center text-center border-solid border-2 border-indigo-600">
-        <h3>
+        <h3 role="month-label">
           {calendar.monLabel} {calendar.year}
         </h3>
+        <button role="previous">Prev</button>
+        <button role="next">Next</button>
       </div>
       <div id="calendar" className="flex flex-wrap">
         <div className="flex justify-center">SUN</div>
