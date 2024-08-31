@@ -2,5 +2,26 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 8px; /* Adjust the gap between the grid items as needed */
-  padding: 16px; /* Optional: Add some padding around the calendar */
+  width: 76vw;
+}
+
+.day {
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#calendar-container {
+  background-color: var(--bg-color);
+  border-radius: 30px;
+  padding: 1em;
+}
+
+.active-week.active-day {
+  background-color: var(--active-color);
+}
+
+.active-week {
+  background-color: var(--active-week-color);
 }

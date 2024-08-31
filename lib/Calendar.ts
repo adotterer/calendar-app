@@ -31,6 +31,44 @@ export default class Calendar {
     const firstOfNextMonth = new Date(`${nextMon}/1/${year}`);
     return new Calendar(firstOfNextMonth);
   }
+
+  get firstSunday() {
+    if (this.monthStartsThisDay === 0) {
+      return 1;
+    } else {
+      let curr = this.monthStartsThisDay;
+      let pointer = 1;
+      while (curr % 7 !== 0) {
+        curr += 1;
+        pointer += 1;
+      }
+      return pointer;
+    }
+  }
+
+  get sundays() {
+    const sundays = [];
+    let curr = this.firstSunday;
+    while (curr <= this.numOfDaysInMonth) {
+      sundays.push(curr);
+      curr += 7;
+    }
+    return sundays;
+  }
+
+  activeWeek(activeDay: number) {
+    const activeIndex = this.sundays.findIndex((sunday) => {
+      const endOfWeek = sunday + 6;
+      return activeDay >= sunday && activeDay <= endOfWeek;
+    });
+    const activeSunday = this.sundays[activeIndex];
+
+    const week = Array.from({ length: 7 }, (_, i) => {
+      return i + activeSunday;
+    });
+
+    return week;
+  }
 }
 
 const months: { [key: number]: string } = {
