@@ -1,5 +1,7 @@
 "use client"; // This is a client component 👈🏽
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft } from "react-icons/fa6";
 
 import Calendar from "@/lib/Calendar";
 
@@ -14,6 +16,12 @@ export default function CalendarComponent({
   const [activeDay, setActiveDay] = useState(new Date().getDate());
 
   const activeWeek = calendar.activeWeek(activeDay);
+
+  useEffect(() => {
+    if (activeDay > calendar.numOfDaysInMonth || activeDay === 30) {
+      setActiveDay(calendar.numOfDaysInMonth);
+    }
+  }, [calendar, activeDay]);
 
   const daysArray = Array.from(
     { length: calendar.numOfDaysInMonth },
@@ -37,10 +45,10 @@ export default function CalendarComponent({
             onClick={() => setCalendar(calendar.prevMonth)}
             role="previous"
           >
-            Prev
+            <FaChevronLeft />
           </button>
           <button onClick={() => setCalendar(calendar.nextMonth)} role="next">
-            Next
+            <FaChevronRight />
           </button>
         </div>
       </div>
