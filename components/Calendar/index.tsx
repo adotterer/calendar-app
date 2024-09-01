@@ -36,11 +36,11 @@ export default function CalendarComponent({
 
   return (
     <div id="calendar-container">
-      <div className="flex justify-between text-center p-2">
-        <h3 role="month-label">
+      <div className="m-4 flex justify-between text-center p-2">
+        <h3 className="mx-2 month-label" role="month-label">
           {calendar.monLabel} {calendar.year}
         </h3>
-        <div role="controls">
+        <div className="controls" role="controls">
           <button
             onClick={() => setCalendar(calendar.prevMonth)}
             role="previous"

@@ -6,7 +6,7 @@
 }
 
 .day {
-  height: 100px;
+  height: 80px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -24,4 +24,22 @@
 
 .active-week {
   background-color: var(--active-week-color);
+}
+
+.month-label {
+  font-size: 2em;
+}
+
+.controls {
+  font-size: 1.1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.controls button {
+  background-color: var(--active-week-color);
+  border-radius: 12px;
+  padding: 8px;
 }

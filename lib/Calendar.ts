@@ -61,11 +61,17 @@ export default class Calendar {
       const endOfWeek = sunday + 6;
       return activeDay >= sunday && activeDay <= endOfWeek;
     });
+
     const activeSunday = this.sundays[activeIndex];
 
-    const week = Array.from({ length: 7 }, (_, i) => {
-      return i + activeSunday;
-    });
+    const week =
+      activeIndex >= 0
+        ? Array.from({ length: 7 }, (_, i) => {
+            return i + activeSunday;
+          })
+        : Array.from({ length: this.sundays[0] - 1 }, (_, i) => {
+            return i + 1;
+          });
 
     return week;
   }
