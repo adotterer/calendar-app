@@ -1,4 +1,4 @@
-import CalendarComponent from "..";
+import CalendarComponent from "../MonthView";
 import Calendar from "@/lib/Calendar";
 import userEvent from "@testing-library/user-event";
 

@@ -5,17 +5,18 @@
   width: 76vw;
 }
 
+#calendar-container {
+  background-color: var(--bg-color);
+  border-radius: 30px;
+  padding: 1em;
+}
+
 .day {
   height: 80px;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-#calendar-container {
-  background-color: var(--bg-color);
-  border-radius: 30px;
-  padding: 1em;
+  border-radius: 12px;
 }
 
 .active-week.active-day {
