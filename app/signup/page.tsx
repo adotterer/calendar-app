@@ -15,15 +15,15 @@ export default function Login() {
 
   const router = useRouter();
 
-  const login = async () => {
+  const signup = async () => {
     try {
-      let { data: dataUser, error } = await supabase.auth.signInWithPassword({
+      let { data: dataUser, error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
       });
 
       if (dataUser) {
-        router.refresh();
+        router.push("/dashboard");
       }
     } catch (error) {
       console.log(error);
@@ -61,15 +61,7 @@ export default function Login() {
       <div>
         <button
           className="px-4 py-2 bg-indigo-600 rounded cursor-pointer"
-          onClick={login}
-        >
-          Login
-        </button>
-      </div>
-      <div>
-        <button
-          className="px-4 py-2 bg-indigo-600 rounded cursor-pointer"
-          onClick={() => router.push("/signup")}
+          onClick={signup}
         >
           Sign up
         </button>
