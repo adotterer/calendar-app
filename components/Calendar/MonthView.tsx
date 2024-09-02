@@ -9,7 +9,7 @@ interface CalendarComponentProps {
   date?: Date;
 }
 
-export default function CalendarComponent({
+export default function MonthView({
   date = new Date(),
 }: CalendarComponentProps) {
   const [calendar, setCalendar] = useState(new Calendar(date));
@@ -18,7 +18,7 @@ export default function CalendarComponent({
   const activeWeek = calendar.activeWeek(activeDay);
 
   useEffect(() => {
-    if (activeDay > calendar.numOfDaysInMonth || activeDay === 30) {
+    if (activeDay > calendar.numOfDaysInMonth) {
       setActiveDay(calendar.numOfDaysInMonth);
     }
   }, [calendar, activeDay]);
@@ -67,8 +67,8 @@ export default function CalendarComponent({
         )}
         {daysArray.map(({ day, activeWeek, activeDay }) => (
           <div
-            className={`day ${activeDay ? "active-day" : null} ${
-              activeWeek ? "active-week" : null
+            className={`day ${activeDay ? "active-day" : ""} ${
+              activeWeek ? "active-week" : ""
             }`}
             key={day}
             onClick={() => setActiveDay(day)}
