@@ -15,6 +15,7 @@ export async function POST(req: NextRequest) {
     cookies: () => cookieStore,
   });
 
+  console.log("SIGNUP");
   await supabase.auth.signUp({
     email,
     password,
