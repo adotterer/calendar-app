@@ -1,6 +1,6 @@
-"use client"; // This is a client component 👈🏽
+"use client";
 import { useState, useEffect } from "react";
-import { FaChevronRight, FaPlus } from "react-icons/fa";
+import { FaChevronRight, FaPlus, FaMinus } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa6";
 
 import Calendar from "@/lib/Calendar";
@@ -47,7 +47,7 @@ export default function MonthView({
             id="create-event"
             className="flex items-center"
           >
-            <FaPlus /> Create Event
+            {creatingEvent ? <FaMinus /> : <FaPlus />} Create Event
           </button>
           <button
             onClick={() => {
