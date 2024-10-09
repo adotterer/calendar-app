@@ -1,6 +1,6 @@
 "use client"; // This is a client component 👈🏽
 import { useState, useEffect } from "react";
-import { FaChevronRight } from "react-icons/fa";
+import { FaChevronRight, FaPlus } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa6";
 
 import Calendar from "@/lib/Calendar";
@@ -14,6 +14,7 @@ export default function MonthView({
 }: CalendarComponentProps) {
   const [calendar, setCalendar] = useState(new Calendar(date));
   const [activeDay, setActiveDay] = useState(new Date().getDate());
+  const [creatingEvent, setCreatingEvent] = useState(false);
 
   const activeWeek = calendar.activeWeek(activeDay);
 
@@ -42,12 +43,28 @@ export default function MonthView({
         </h3>
         <div className="controls" role="controls">
           <button
-            onClick={() => setCalendar(calendar.prevMonth)}
+            onClick={() => setCreatingEvent((b) => !b)}
+            id="create-event"
+            className="flex items-center"
+          >
+            <FaPlus /> Create Event
+          </button>
+          <button
+            onClick={() => {
+              setCreatingEvent(false);
+              setCalendar(calendar.prevMonth);
+            }}
             role="previous"
           >
             <FaChevronLeft />
           </button>
-          <button onClick={() => setCalendar(calendar.nextMonth)} role="next">
+          <button
+            onClick={() => {
+              setCreatingEvent(false);
+              setCalendar(calendar.nextMonth);
+            }}
+            role="next"
+          >
             <FaChevronRight />
           </button>
         </div>
@@ -69,11 +86,19 @@ export default function MonthView({
           <div
             className={`day ${activeDay ? "active-day" : ""} ${
               activeWeek ? "active-week" : ""
-            }`}
+            } ${creatingEvent && activeWeek ? "creating-event" : ""}`}
             key={day}
             onClick={() => setActiveDay(day)}
           >
-            {day}
+            <span>{day}</span>
+            {activeDay && creatingEvent ? (
+              <span className="select-event-day">
+                {" "}
+                <FaPlus />
+              </span>
+            ) : (
+              ""
+            )}
           </div>
         ))}
       </div>

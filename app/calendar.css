@@ -2,13 +2,20 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 8px; /* Adjust the gap between the grid items as needed */
-  width: 76vw;
+  width: 74vw;
 }
 
 #calendar-container {
   background-color: var(--bg-color);
   border-radius: 30px;
   padding: 1em;
+}
+
+#create-event {
+  background-color: var(--active-color);
+  border-radius: 12px;
+  padding: 6px 8px;
+  gap: 8px;
 }
 
 .day {
@@ -32,7 +39,7 @@
 }
 
 .controls {
-  font-size: 1.1em;
+  font-size: 1em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -43,4 +50,25 @@
   background-color: var(--active-week-color);
   border-radius: 12px;
   padding: 8px;
+}
+
+.creating-event {
+  min-height: 140px;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 20px;
+}
+
+.active-day.creating-event {
+  flex-direction: column;
+  border: 2px solid white;
+  justify-content: space-between;
+}
+
+.select-event-day {
+  background-color: var(--bg-color);
+  padding: 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid white;
 }

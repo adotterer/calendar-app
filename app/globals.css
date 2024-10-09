@@ -19,7 +19,7 @@ body {
 
 input {
   background-color: #2b2b2b;
-  padding: 8px;
+  padding: 12px;
 }
 
 @layer utilities {

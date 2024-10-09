@@ -7,15 +7,22 @@ export default class Event {
     this.endTime = endTime.toISOString();
   }
 
-  getStartTimeForUser(timezone: string): string {
+  localStartTime(timezone: string): string {
     return new Date(this.startTime).toLocaleString("en-US", {
       timeZone: timezone,
     });
   }
 
-  getEndTimeForUser(timezone: string): string {
+  localEndTime(timezone: string): string {
     return new Date(this.endTime).toLocaleString("en-US", {
       timeZone: timezone,
     });
   }
 }
+
+// timezone:
+/* 
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#locales
+
+https://www.iana.org/time-zones
+*/
