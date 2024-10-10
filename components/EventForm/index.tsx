@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 // Type for event data
 type EventFormProps = {
-  onSubmit: (eventData: EventData) => void;
+  onSubmit: (EventData) => void;
   currentDay: string;
 };
 
