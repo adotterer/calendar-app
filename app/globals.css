@@ -20,7 +20,10 @@ body {
 input,
 select {
   background-color: #2b2b2b;
-  padding: 12px;
+  border-right: 10px solid #2b2b2b;
+  margin-right: 8px;
+  padding: 8px;
+  border-radius: 8px;
 }
 
 label {
@@ -29,6 +32,16 @@ label {
 
 form > div {
   margin: 8px 0;
+}
+
+form button {
+  background-color: var(--active-week-color);
+  border-radius: 12px;
+  padding: 8px;
+}
+
+form button:hover {
+  background-color: var(--active-color);
 }
 
 @layer utilities {
