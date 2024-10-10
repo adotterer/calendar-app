@@ -4,11 +4,16 @@ import { FaChevronRight, FaPlus, FaMinus } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa6";
 import Modal from "../Modal";
 import EventForm from "../EventForm";
-
+import { EventData } from "../EventForm";
 import Calendar from "@/lib/Calendar";
 
 interface CalendarComponentProps {
   date?: Date;
+}
+
+function onSubmit(eventData: EventData) {
+  console.log(eventData);
+  return true;
 }
 
 export default function MonthView({
@@ -43,7 +48,7 @@ export default function MonthView({
       <div id="calendar-container">
         <div className="m-4 flex justify-between text-center p-2">
           <h3 className="mx-2 month-label" role="month-label">
-            {calendar.monLabel} {calendar.year}
+            {calendar.month} {calendar.year}
           </h3>
           <div className="controls" role="controls">
             <button
@@ -113,7 +118,7 @@ export default function MonthView({
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
         <EventForm
           currentDay={calendar.day + ", " + calendar.month + " " + activeDay}
-          onSubmit={() => null}
+          onSubmit={onSubmit}
         />
       </Modal>
     </>

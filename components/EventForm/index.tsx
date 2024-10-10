@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 
-// Type for event data
-type EventFormProps = {
-  onSubmit: (EventData) => void;
-  currentDay: string;
-};
-
-type EventData = {
+export type EventData = {
   name: string;
   startTime: string;
   endTime: string;
   guests: string[];
+};
+
+type EventFormProps = {
+  // eslint-disable-next-line no-unused-vars
+  onSubmit: (eventData: EventData) => boolean;
+  currentDay: string;
 };
 
 // Generate times in 30-minute intervals
