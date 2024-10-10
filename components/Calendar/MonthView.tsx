@@ -46,7 +46,7 @@ export default function MonthView({
   return (
     <>
       <div id="calendar-container">
-        <div className="m-4 flex justify-between text-center p-2">
+        <div className="md:m-4 flex justify-between text-center lg:p-2">
           <h3 className="mx-2 month-label" role="month-label">
             {calendar.month} {calendar.year}
           </h3>

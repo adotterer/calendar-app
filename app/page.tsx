@@ -13,7 +13,7 @@ export default function Home() {
   // setNewView();
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-10">
+    <main className="flex min-h-screen flex-col items-center justify-between md:p-10">
       <MonthView />
     </main>
   );

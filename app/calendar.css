@@ -5,6 +5,15 @@
   width: 74vw;
 }
 
+@media screen and (max-width: 600px) {
+  #calendar {
+    width: unset;
+  }
+  #calendar-container {
+    transform: scale(0.78);
+  }
+}
+
 #calendar-container {
   background-color: var(--bg-color);
   border-radius: 30px;
