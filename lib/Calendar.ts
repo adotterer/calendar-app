@@ -2,6 +2,8 @@ export default class Calendar {
   date: Date;
   mon: number;
   monLabel: string;
+  day: string;
+  month: string;
   year: number;
   firstOfThisMonth: Date;
   numOfDaysInMonth: number;
@@ -11,6 +13,8 @@ export default class Calendar {
     this.date = date;
     this.mon = this.date.getMonth() + 1; // NOT 0 indexed now
     this.monLabel = months[this.mon];
+    this.month = monthsFull[this.mon];
+    this.day = this.date.toLocaleDateString("en-US", { weekday: "long" });
     this.year = this.date.getFullYear();
     this.firstOfThisMonth = new Date(`${this.mon}/1/${this.year}`);
     this.numOfDaysInMonth = new Date(this.year, this.mon, 0).getDate();
@@ -90,4 +94,19 @@ const months: { [key: number]: string } = {
   10: "OCT",
   11: "NOV",
   12: "DEC",
+};
+
+const monthsFull: { [key: number]: string } = {
+  1: "January",
+  2: "February",
+  3: "March",
+  4: "April",
+  5: "May",
+  6: "June",
+  7: "July",
+  8: "August",
+  9: "September",
+  10: "October",
+  11: "November",
+  12: "December",
 };

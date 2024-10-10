@@ -111,7 +111,10 @@ export default function MonthView({
         </div>
       </div>
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
-        <EventForm onSubmit={() => null} />
+        <EventForm
+          currentDay={calendar.day + ", " + calendar.month + " " + activeDay}
+          onSubmit={() => null}
+        />
       </Modal>
     </>
   );

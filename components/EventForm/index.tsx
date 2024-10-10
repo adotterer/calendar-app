@@ -1,27 +1,67 @@
 import React, { useState } from "react";
 
+// Type for event data
 type EventFormProps = {
-  onSubmit: (eventData: EventData) => void; // Function to handle form submission
+  onSubmit: (eventData: EventData) => void;
+  currentDay: string;
 };
 
 type EventData = {
   name: string;
-  startTime: string; // Using ISO string format for start and end times
+  startTime: string;
   endTime: string;
-  guests: string[]; // List of guest email addresses
+  guests: string[];
 };
 
-const CreateEventForm: React.FC<EventFormProps> = ({ onSubmit }) => {
+// Generate times in 30-minute intervals
+const generateTimes = () => {
+  const times: string[] = [];
+  const startHour = 0;
+  const endHour = 24;
+  for (let hour = startHour; hour < endHour; hour++) {
+    times.push(formatTime(hour, 0));
+    times.push(formatTime(hour, 30));
+  }
+  return times;
+};
+
+// Format the time to 12-hour AM/PM format
+const formatTime = (hour: number, minute: number): string => {
+  const isPM = hour >= 12;
+  const displayHour = hour % 12 || 12;
+  const displayMinute = minute === 0 ? "00" : minute;
+  const period = isPM ? "PM" : "AM";
+  return `${displayHour}:${displayMinute} ${period}`;
+};
+
+// Convert 12-hour time to 24-hour time for comparison
+const convertTo24Hour = (time: string) => {
+  const [hoursMinutes, period] = time.split(" ");
+  let [hours, minutes] = hoursMinutes.split(":").map(Number);
+  if (period === "PM" && hours !== 12) {
+    hours += 12;
+  } else if (period === "AM" && hours === 12) {
+    hours = 0;
+  }
+  return hours * 60 + minutes;
+};
+
+const CreateEventForm: React.FC<EventFormProps> = ({
+  onSubmit,
+  currentDay,
+}) => {
   const [name, setName] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
   const [guests, setGuests] = useState<string[]>([]);
 
+  const times = generateTimes();
+
   const handleAddGuest = () => {
     if (guestEmail && !guests.includes(guestEmail)) {
       setGuests([...guests, guestEmail]);
-      setGuestEmail(""); // Clear the input field after adding a guest
+      setGuestEmail("");
     }
   };
 
@@ -31,7 +71,13 @@ const CreateEventForm: React.FC<EventFormProps> = ({ onSubmit }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simple validation
+
+    // Validation: Check if the end time is after the start time
+    if (convertTo24Hour(endTime) <= convertTo24Hour(startTime)) {
+      alert("End time must be after the start time.");
+      return;
+    }
+
     if (name && startTime && endTime && guests.length > 0) {
       const eventData: EventData = {
         name,
@@ -39,7 +85,7 @@ const CreateEventForm: React.FC<EventFormProps> = ({ onSubmit }) => {
         endTime,
         guests,
       };
-      onSubmit(eventData); // Submit the form data
+      onSubmit(eventData);
     } else {
       alert("Please fill out all fields and add at least one guest.");
     }
@@ -57,24 +103,41 @@ const CreateEventForm: React.FC<EventFormProps> = ({ onSubmit }) => {
         />
       </div>
 
+      <div>{currentDay}</div>
       <div>
         <label>Start Time</label>
-        <input
-          type="datetime-local"
+        <select
           value={startTime}
           onChange={(e) => setStartTime(e.target.value)}
           required
-        />
+        >
+          <option value="" disabled>
+            Select Start Time
+          </option>
+          {times.map((time, index) => (
+            <option key={index} value={time}>
+              {time}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div>
         <label>End Time</label>
-        <input
-          type="datetime-local"
+        <select
           value={endTime}
           onChange={(e) => setEndTime(e.target.value)}
           required
-        />
+        >
+          <option value="" disabled>
+            Select End Time
+          </option>
+          {times.map((time, index) => (
+            <option key={index} value={time}>
+              {time}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div>
