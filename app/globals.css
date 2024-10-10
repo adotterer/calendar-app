@@ -17,9 +17,18 @@ body {
   background-color: rgb(var(--background-end-rgb));
 }
 
-input {
+input,
+select {
   background-color: #2b2b2b;
-  padding: 8px;
+  padding: 12px;
+}
+
+label {
+  padding-right: 8px;
+}
+
+form > div {
+  margin: 8px 0;
 }
 
 @layer utilities {
