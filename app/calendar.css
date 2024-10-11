@@ -20,7 +20,7 @@
   padding: 1em;
 }
 
-#create-event {
+.user-button {
   background-color: var(--active-color);
   border-radius: 12px;
   padding: 6px 8px;
@@ -47,7 +47,7 @@
   font-size: 2em;
 }
 
-.controls {
+.user-controls {
   font-size: 1em;
   display: flex;
   justify-content: center;
@@ -55,7 +55,14 @@
   gap: 12px;
 }
 
-.controls button {
+.month-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.month-controls button {
   background-color: var(--active-week-color);
   border-radius: 12px;
   padding: 8px;

@@ -6,6 +6,8 @@ import Modal from "../Modal";
 import EventForm from "../EventForm";
 import { EventData } from "../EventForm";
 import Calendar from "@/lib/Calendar";
+import { FiLogIn } from "react-icons/fi";
+import { FaRegUser } from "react-icons/fa";
 
 interface CalendarComponentProps {
   date?: Date;
@@ -23,6 +25,7 @@ export default function MonthView({
   const [activeDay, setActiveDay] = useState(new Date().getDate());
   const [creatingEvent, setCreatingEvent] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const activeWeek = calendar.activeWeek(activeDay);
 
@@ -46,36 +49,45 @@ export default function MonthView({
   return (
     <>
       <div id="calendar-container">
-        <div className="md:m-4 flex justify-between text-center lg:p-2">
+        <div className="m-4 flex justify-between text-center lg:p-2">
           <h3 className="mx-2 month-label" role="month-label">
             {calendar.month} {calendar.year}
           </h3>
-          <div className="controls" role="controls">
+          <div className="user-controls">
+            <button
+              onClick={() => setLoggedIn((b) => !b)}
+              className="flex items-center user-button"
+            >
+              {loggedIn ? <FaRegUser /> : <FiLogIn />}
+              {loggedIn ? "User name here" : "Login"}
+              {}
+            </button>
             <button
               onClick={() => setCreatingEvent((b) => !b)}
-              id="create-event"
-              className="flex items-center"
+              className="flex items-center user-button"
             >
               {creatingEvent ? <FaMinus /> : <FaPlus />} Create Event
             </button>
-            <button
-              onClick={() => {
-                setCreatingEvent(false);
-                setCalendar(calendar.prevMonth);
-              }}
-              role="previous"
-            >
-              <FaChevronLeft />
-            </button>
-            <button
-              onClick={() => {
-                setCreatingEvent(false);
-                setCalendar(calendar.nextMonth);
-              }}
-              role="next"
-            >
-              <FaChevronRight />
-            </button>
+            <div className="month-controls" role="controls">
+              <button
+                onClick={() => {
+                  setCreatingEvent(false);
+                  setCalendar(calendar.prevMonth);
+                }}
+                role="previous"
+              >
+                <FaChevronLeft />
+              </button>
+              <button
+                onClick={() => {
+                  setCreatingEvent(false);
+                  setCalendar(calendar.nextMonth);
+                }}
+                role="next"
+              >
+                <FaChevronRight />
+              </button>
+            </div>
           </div>
         </div>
         <div id="calendar" className="flex flex-wrap">
