@@ -1,7 +1,8 @@
 import MonthView from "../components/Calendar/MonthView";
 // import { supabaseAdmin } from "@/lib/supabase";
+// import { createClient } from "@/lib/serversupabase";
 
-export default function Home() {
+export default async function Home() {
   /*   const setNewView = async () => {
     const { data, error } = await supabaseAdmin.from("views").insert({
       name: "random name",

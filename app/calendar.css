@@ -12,6 +12,9 @@
   #calendar-container {
     transform: scale(0.78);
   }
+  .user-controls {
+    font-size: 0.8em;
+  }
 }
 
 #calendar-container {

@@ -8,10 +8,25 @@ import { EventData } from "../EventForm";
 import Calendar from "@/lib/Calendar";
 import { FiLogIn } from "react-icons/fi";
 import { FaRegUser } from "react-icons/fa";
+import { clientSupabase } from "@/lib/supabase";
+import Login from "../Login";
+import LoginButton from "../Login/button";
 
 interface CalendarComponentProps {
   date?: Date;
 }
+
+/* export async function getServerSideProps() {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  console.log(session, " from get serverside props session");
+  return {
+    props: {
+      session,
+    },
+  };
+} */
 
 function onSubmit(eventData: EventData) {
   console.log(eventData);
@@ -24,8 +39,24 @@ export default function MonthView({
   const [calendar, setCalendar] = useState(new Calendar(date));
   const [activeDay, setActiveDay] = useState(new Date().getDate());
   const [creatingEvent, setCreatingEvent] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [calendarModalOpen, setCalendarModalOpen] = useState(false);
+  const [loggedIn, setLoggedIn] = useState("");
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+
+  const getSession = async () => {
+    const {
+      data: { session },
+    } = await clientSupabase.auth.getSession();
+    console.log(session);
+    if (session?.user.email) {
+      setLoggedIn(session.user.email);
+    }
+    return session;
+  };
+
+  useEffect(() => {
+    getSession();
+  }, []);
 
   const activeWeek = calendar.activeWeek(activeDay);
 
@@ -55,13 +86,13 @@ export default function MonthView({
           </h3>
           <div className="user-controls">
             <button
-              onClick={() => setLoggedIn((b) => !b)}
+              onClick={() => setLoginModalOpen(true)}
               className="flex items-center user-button"
             >
               {loggedIn ? <FaRegUser /> : <FiLogIn />}
-              {loggedIn ? "User name here" : "Login"}
-              {}
+              {loggedIn ? loggedIn : "Login"}
             </button>
+            {/* <LoginButton /> */}
             <button
               onClick={() => setCreatingEvent((b) => !b)}
               className="flex items-center user-button"
@@ -114,7 +145,7 @@ export default function MonthView({
               <span>{day}</span>
               {activeDay && creatingEvent ? (
                 <button
-                  onClick={() => setModalOpen(true)}
+                  onClick={() => setCalendarModalOpen(true)}
                   className="select-event-day"
                 >
                   {" "}
@@ -127,7 +158,13 @@ export default function MonthView({
           ))}
         </div>
       </div>
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
+      <Modal isOpen={loginModalOpen} onClose={() => setLoginModalOpen(false)}>
+        <Login />
+      </Modal>
+      <Modal
+        isOpen={calendarModalOpen}
+        onClose={() => setCalendarModalOpen(false)}
+      >
         <EventForm
           currentDay={calendar.day + ", " + calendar.month + " " + activeDay}
           onSubmit={onSubmit}
