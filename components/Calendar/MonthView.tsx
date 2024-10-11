@@ -1,32 +1,18 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { FaChevronRight, FaPlus, FaMinus } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa6";
 import Modal from "../Modal";
 import EventForm from "../EventForm";
 import { EventData } from "../EventForm";
 import Calendar from "@/lib/Calendar";
-import { FiLogIn } from "react-icons/fi";
-import { FaRegUser } from "react-icons/fa";
 import { clientSupabase } from "@/lib/supabase";
-import Login from "../Login";
 import LoginButton from "../Login/button";
+import Loading from "../Loading";
 
 interface CalendarComponentProps {
   date?: Date;
 }
-
-/* export async function getServerSideProps() {
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  console.log(session, " from get serverside props session");
-  return {
-    props: {
-      session,
-    },
-  };
-} */
 
 function onSubmit(eventData: EventData) {
   console.log(eventData);
@@ -85,14 +71,8 @@ export default function MonthView({
             {calendar.month} {calendar.year}
           </h3>
           <div className="user-controls">
-            <button
-              onClick={() => setLoginModalOpen(true)}
-              className="flex items-center user-button"
-            >
-              {loggedIn ? <FaRegUser /> : <FiLogIn />}
-              {loggedIn ? loggedIn : "Login"}
-            </button>
-            {/* <LoginButton /> */}
+            <LoginButton />
+
             <button
               onClick={() => setCreatingEvent((b) => !b)}
               className="flex items-center user-button"
@@ -158,9 +138,7 @@ export default function MonthView({
           ))}
         </div>
       </div>
-      <Modal isOpen={loginModalOpen} onClose={() => setLoginModalOpen(false)}>
-        <Login />
-      </Modal>
+
       <Modal
         isOpen={calendarModalOpen}
         onClose={() => setCalendarModalOpen(false)}

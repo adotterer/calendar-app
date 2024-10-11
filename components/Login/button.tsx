@@ -1,20 +1,43 @@
-// "use server";
+import { useState } from "react";
 import { clientSupabase } from "@/lib/supabase";
-import { FiLogIn } from "react-icons/fi";
 import { FaRegUser } from "react-icons/fa";
-// import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
+import Login from "./";
+import Loading from "../Loading";
+import Modal from "../Modal";
 
-// export const getServerSideProps = async () => {};
+export default function LoginButton() {
+  const [loggedIn, setLoggedIn] = useState("");
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
-export default async function LoginButton() {
-  const {
-    data: { session },
-  } = await clientSupabase.auth.getSession();
+  const getSession = async () => {
+    const {
+      data: { session },
+    } = await clientSupabase.auth.getSession();
+    if (session?.user.email) {
+      setLoggedIn(session.user.email);
+    }
+    return session;
+  };
 
+  const onClickEvent = () => {
+    setLoginModalOpen(true);
+  };
+
+  getSession();
+
+  if (!loggedIn) return <Loading />;
   return (
-    <button className="flex items-center user-button">
-      {session ? <FaRegUser /> : <FiLogIn />}
-      {session ? session.user.email : "Login"}
-    </button>
+    <>
+      <button
+        onClick={loggedIn ? () => null : () => onClickEvent()}
+        className="flex items-center user-button"
+      >
+        <FaRegUser />
+        {loggedIn}
+      </button>
+      <Modal isOpen={loginModalOpen} onClose={() => setLoginModalOpen(false)}>
+        <Login />
+      </Modal>
+    </>
   );
 }
