@@ -34,13 +34,13 @@ form > div {
   margin: 8px 0;
 }
 
-form button {
+button {
   background-color: var(--active-week-color);
   border-radius: 12px;
   padding: 8px;
 }
 
-form button:hover {
+button:hover {
   background-color: var(--active-color);
 }
 

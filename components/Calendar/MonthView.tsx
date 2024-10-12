@@ -72,7 +72,6 @@ export default function MonthView({
           </h3>
           <div className="user-controls">
             <LoginButton />
-
             <button
               onClick={() => setCreatingEvent((b) => !b)}
               className="flex items-center user-button"

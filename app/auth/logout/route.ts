@@ -12,7 +12,5 @@ export async function GET(req: NextRequest) {
   });
   await supabase.auth.signOut();
 
-  return NextResponse.redirect(url.origin, {
-    status: 301,
-  });
+  return new NextResponse(JSON.stringify({ logout: true }));
 }

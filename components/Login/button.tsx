@@ -2,8 +2,11 @@ import { useState } from "react";
 import { clientSupabase } from "@/lib/supabase";
 import { FaRegUser } from "react-icons/fa";
 import Login from "./";
+import Logout from "../Logout";
 import Loading from "../Loading";
 import Modal from "../Modal";
+
+const loginMessage = "Login";
 
 export default function LoginButton() {
   const [loggedIn, setLoggedIn] = useState("");
@@ -13,10 +16,13 @@ export default function LoginButton() {
     const {
       data: { session },
     } = await clientSupabase.auth.getSession();
+    console.log(session, "logout");
     if (session?.user.email) {
       setLoggedIn(session.user.email);
+    } else {
+      setLoggedIn(loginMessage);
     }
-    return session;
+    // return session;
   };
 
   const onClickEvent = () => {
@@ -29,14 +35,18 @@ export default function LoginButton() {
   return (
     <>
       <button
-        onClick={loggedIn ? () => null : () => onClickEvent()}
+        onClick={() => setLoginModalOpen(true)}
         className="flex items-center user-button"
       >
         <FaRegUser />
-        {loggedIn}
+        {loggedIn === loginMessage ? loginMessage : loggedIn}
       </button>
       <Modal isOpen={loginModalOpen} onClose={() => setLoginModalOpen(false)}>
-        <Login />
+        {loggedIn === loginMessage ? (
+          <Login />
+        ) : (
+          <Logout closeModal={() => setLoginModalOpen(false)} />
+        )}
       </Modal>
     </>
   );
