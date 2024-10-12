@@ -7,7 +7,6 @@ export default function Login() {
     >
       <label htmlFor="email">Email</label>
       <input name="email" />
-      <br />
       <label htmlFor="password">Password</label>
       <input type="password" name="password" />
       <button>Sign In</button>
