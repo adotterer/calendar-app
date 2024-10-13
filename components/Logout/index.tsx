@@ -9,9 +9,8 @@ export default function Logout({ closeModal }: LogoutProps) {
     function signOut() {
       fetch("/auth/logout")
         .then((res) => res.json())
-        .then((res) => {
-          console.log(res, "res");
-          closeModal();
+        .then(({ logout }) => {
+          if (logout) closeModal();
         });
     },
     [closeModal]

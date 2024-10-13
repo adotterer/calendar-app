@@ -16,7 +16,6 @@ export default function LoginButton() {
     const {
       data: { session },
     } = await clientSupabase.auth.getSession();
-    console.log(session, "logout");
     if (session?.user.email) {
       setLoggedIn(session.user.email);
     } else {
@@ -25,9 +24,9 @@ export default function LoginButton() {
     // return session;
   };
 
-  const onClickEvent = () => {
-    setLoginModalOpen(true);
-  };
+  //   const onClickEvent = () => {
+  //     setLoginModalOpen(true);
+  //   };
 
   getSession();
 
