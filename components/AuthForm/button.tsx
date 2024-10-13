@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { clientSupabase } from "@/lib/supabase";
 import { FaRegUser } from "react-icons/fa";
-import Login from "./";
+import AuthForm from ".";
 import Logout from "../Logout";
 import Loading from "../Loading";
 import Modal from "../Modal";
@@ -21,12 +21,7 @@ export default function LoginButton() {
     } else {
       setLoggedIn(loginMessage);
     }
-    // return session;
   };
-
-  //   const onClickEvent = () => {
-  //     setLoginModalOpen(true);
-  //   };
 
   getSession();
 
@@ -42,7 +37,7 @@ export default function LoginButton() {
       </button>
       <Modal isOpen={loginModalOpen} onClose={() => setLoginModalOpen(false)}>
         {loggedIn === loginMessage ? (
-          <Login />
+          <AuthForm closeModal={() => setLoginModalOpen(false)} />
         ) : (
           <Logout closeModal={() => setLoginModalOpen(false)} />
         )}

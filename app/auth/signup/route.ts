@@ -14,7 +14,6 @@ export async function POST(req: NextRequest) {
   const supabase = createRouteHandlerClient({
     cookies: () => cookieStore,
   });
-  console.log("SIGNUP????", email);
 
   await supabase.auth.signUp({
     email,
@@ -24,7 +23,7 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  return NextResponse.redirect(url.origin, {
-    status: 301,
-  });
+  return new NextResponse(
+    JSON.stringify({ ok: true, status: 200, message: "Please check your email to confirm your address." })
+  );
 }

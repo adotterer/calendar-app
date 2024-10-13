@@ -7,7 +7,7 @@ import EventForm from "../EventForm";
 import { EventData } from "../EventForm";
 import Calendar from "@/lib/Calendar";
 import { clientSupabase } from "@/lib/supabase";
-import LoginButton from "../Login/button";
+import LoginButton from "../AuthForm/button";
 import Loading from "../Loading";
 
 interface CalendarComponentProps {
@@ -26,23 +26,6 @@ export default function MonthView({
   const [activeDay, setActiveDay] = useState(new Date().getDate());
   const [creatingEvent, setCreatingEvent] = useState(false);
   const [calendarModalOpen, setCalendarModalOpen] = useState(false);
-  const [loggedIn, setLoggedIn] = useState("");
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
-
-  const getSession = async () => {
-    const {
-      data: { session },
-    } = await clientSupabase.auth.getSession();
-    console.log(session);
-    if (session?.user.email) {
-      setLoggedIn(session.user.email);
-    }
-    return session;
-  };
-
-  useEffect(() => {
-    getSession();
-  }, []);
 
   const activeWeek = calendar.activeWeek(activeDay);
 
@@ -137,7 +120,6 @@ export default function MonthView({
           ))}
         </div>
       </div>
-
       <Modal
         isOpen={calendarModalOpen}
         onClose={() => setCalendarModalOpen(false)}
