@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-
+import { useState, FormEvent } from "react";
 export type EventData = {
   name: string;
   startTime: string;
@@ -10,7 +9,8 @@ export type EventData = {
 type EventFormProps = {
   // eslint-disable-next-line no-unused-vars
   onSubmit: (eventData: EventData) => boolean;
-  currentDay: string;
+  currentDayLabel: string;
+  currentDate: string;
 };
 
 // Generate times in 30-minute intervals
@@ -46,9 +46,20 @@ const convertTo24Hour = (time: string) => {
   return hours * 60 + minutes;
 };
 
+const convertForHoursMins = (time: string) => {
+  const [hoursMinutes, period] = time.split(" ");
+  let [hours, minutes] = hoursMinutes.split(":").map(Number);
+  if (period === "PM" && hours !== 12) {
+    hours += 12;
+  } else if (period === "AM" && hours === 12) {
+    hours = 0;
+  }
+  return [hours, minutes];
+};
+
 const CreateEventForm: React.FC<EventFormProps> = ({
-  onSubmit,
-  currentDay,
+  currentDayLabel,
+  currentDate,
 }) => {
   const [name, setName] = useState("");
   const [startTime, setStartTime] = useState("");
@@ -79,13 +90,19 @@ const CreateEventForm: React.FC<EventFormProps> = ({
     }
 
     if (name && startTime && endTime && guests.length > 0) {
-      const eventData: EventData = {
-        name,
-        startTime,
-        endTime,
-        guests,
-      };
-      onSubmit(eventData);
+      const [year, month, day] = currentDate.split("-").map(Number); // Assuming currentDay is in "YYYY-MM-DD" format
+      console.log(currentDate, "current date");
+
+      const [startHour, startMinute] = convertForHoursMins(startTime);
+      const startDate = new Date(year, month, day, startHour, startMinute);
+      const startTimeStamp = startDate.getTime();
+      console.log(startTimeStamp, "start time stamp");
+
+      console.log(startHour, startMinute, "start");
+      const [endHour, endMinute] = convertForHoursMins(endTime);
+      const endDate = new Date(year, month, day, endHour, endMinute);
+      const endTimeStamp = endDate.getTime();
+      console.log(endTimeStamp, "end time stamp");
     } else {
       alert("Please fill out all fields and add at least one guest.");
     }
@@ -103,7 +120,7 @@ const CreateEventForm: React.FC<EventFormProps> = ({
         />
       </div>
 
-      <div>{currentDay}</div>
+      <div>{currentDayLabel}</div>
       <div>
         <label>Start Time</label>
         <select

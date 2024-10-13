@@ -15,7 +15,10 @@ interface CalendarComponentProps {
 }
 
 function onSubmit(eventData: EventData) {
-  console.log(eventData);
+  console.log("event data", eventData);
+
+  // add table row here
+
   return true;
 }
 
@@ -125,8 +128,10 @@ export default function MonthView({
         onClose={() => setCalendarModalOpen(false)}
       >
         <EventForm
-          currentDay={calendar.day + ", " + calendar.month + " " + activeDay}
-          onSubmit={onSubmit}
+          currentDate={calendar.dateFormat}
+          currentDayLabel={
+            calendar.day + ", " + calendar.month + " " + activeDay
+          }
         />
       </Modal>
     </>
