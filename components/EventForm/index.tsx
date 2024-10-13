@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+
+import Event from "@/lib/Event";
 
 export type EventData = {
   name: string;
@@ -8,9 +11,8 @@ export type EventData = {
 };
 
 type EventFormProps = {
-  // eslint-disable-next-line no-unused-vars
-  onSubmit: (eventData: EventData) => boolean;
-  currentDay: string;
+  currentDayLabel: string;
+  currentDate: string;
 };
 
 // Generate times in 30-minute intervals
@@ -47,9 +49,10 @@ const convertTo24Hour = (time: string) => {
 };
 
 const CreateEventForm: React.FC<EventFormProps> = ({
-  onSubmit,
-  currentDay,
+  currentDayLabel,
+  currentDate,
 }) => {
+  const { session } = useAuth();
   const [name, setName] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -79,13 +82,20 @@ const CreateEventForm: React.FC<EventFormProps> = ({
     }
 
     if (name && startTime && endTime && guests.length > 0) {
-      const eventData: EventData = {
-        name,
-        startTime,
-        endTime,
-        guests,
-      };
-      onSubmit(eventData);
+      const event = new Event(name, currentDate, startTime, endTime, guests);
+      fetch("/events", {
+        method: "POST",
+        body: JSON.stringify({
+          name,
+          user_id: session?.user.id,
+          start_time: event.startTimeStamp,
+          end_time: event.endTimeStamp,
+          guests,
+        }),
+      })
+        .then((res) => res.json())
+        .then((res) => console.log(res, "response from api"));
+      // console.log(event.startTimeStamp, event.endTimeStamp, "event");
     } else {
       alert("Please fill out all fields and add at least one guest.");
     }
@@ -103,7 +113,7 @@ const CreateEventForm: React.FC<EventFormProps> = ({
         />
       </div>
 
-      <div>{currentDay}</div>
+      <div>{currentDayLabel}</div>
       <div>
         <label>Start Time</label>
         <select

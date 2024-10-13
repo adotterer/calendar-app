@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { clientSupabase } from "@/lib/supabase";
 import { FaRegUser } from "react-icons/fa";
+import { useAuth } from "@/context/AuthContext";
 import AuthForm from ".";
 import Logout from "../Logout";
 import Loading from "../Loading";
@@ -9,23 +9,11 @@ import Modal from "../Modal";
 const loginMessage = "Login";
 
 export default function LoginButton() {
-  const [loggedIn, setLoggedIn] = useState("");
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const { session, loading } = useAuth();
+  const [loginModalOpen, setLoginModalOpen] = useState<boolean>(false);
 
-  const getSession = async () => {
-    const {
-      data: { session },
-    } = await clientSupabase.auth.getSession();
-    if (session?.user.email) {
-      setLoggedIn(session.user.email);
-    } else {
-      setLoggedIn(loginMessage);
-    }
-  };
+  if (loading) return <Loading />;
 
-  getSession();
-
-  if (!loggedIn) return <Loading />;
   return (
     <>
       <button
@@ -33,10 +21,10 @@ export default function LoginButton() {
         className="flex items-center user-button"
       >
         <FaRegUser />
-        {loggedIn === loginMessage ? loginMessage : loggedIn}
+        {session ? session.user.email : loginMessage}
       </button>
       <Modal isOpen={loginModalOpen} onClose={() => setLoginModalOpen(false)}>
-        {loggedIn === loginMessage ? (
+        {!session ? (
           <AuthForm closeModal={() => setLoginModalOpen(false)} />
         ) : (
           <Logout closeModal={() => setLoginModalOpen(false)} />

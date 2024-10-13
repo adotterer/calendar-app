@@ -6,16 +6,19 @@ import Modal from "../Modal";
 import EventForm from "../EventForm";
 import { EventData } from "../EventForm";
 import Calendar from "@/lib/Calendar";
-import { clientSupabase } from "@/lib/supabase";
+// import { clientSupabase } from "@/lib/supabase";
 import LoginButton from "../AuthForm/button";
-import Loading from "../Loading";
+// import Loading from "../Loading";
 
 interface CalendarComponentProps {
   date?: Date;
 }
 
 function onSubmit(eventData: EventData) {
-  console.log(eventData);
+  console.log("event data", eventData);
+
+  // add table row here
+
   return true;
 }
 
@@ -125,8 +128,10 @@ export default function MonthView({
         onClose={() => setCalendarModalOpen(false)}
       >
         <EventForm
-          currentDay={calendar.day + ", " + calendar.month + " " + activeDay}
-          onSubmit={onSubmit}
+          currentDate={calendar.dateFormat}
+          currentDayLabel={
+            calendar.day + ", " + calendar.month + " " + activeDay
+          }
         />
       </Modal>
     </>

@@ -9,7 +9,7 @@ Style your own calendar according to your requirement
 
 ## User Stories
 
-- [ ] User can create event
+- [x] User can create event
 - [ ] User can edit event
 - [ ] User can delete event
 

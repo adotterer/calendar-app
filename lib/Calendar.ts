@@ -3,6 +3,7 @@ export default class Calendar {
   mon: number;
   monLabel: string;
   day: string;
+  dayNumber: number;
   month: string;
   year: number;
   firstOfThisMonth: Date;
@@ -15,10 +16,15 @@ export default class Calendar {
     this.monLabel = months[this.mon];
     this.month = monthsFull[this.mon];
     this.day = this.date.toLocaleDateString("en-US", { weekday: "long" });
+    this.dayNumber = this.date.getDate();
     this.year = this.date.getFullYear();
     this.firstOfThisMonth = new Date(`${this.mon}/1/${this.year}`);
     this.numOfDaysInMonth = new Date(this.year, this.mon, 0).getDate();
     this.monthStartsThisDay = this.firstOfThisMonth.getDay();
+  }
+
+  get dateFormat() {
+    return `${this.year}-${this.mon}-${this.dayNumber}`;
   }
 
   get prevMonth() {
