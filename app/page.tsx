@@ -1,6 +1,7 @@
 import MonthView from "../components/Calendar/MonthView";
 // import { supabaseAdmin } from "@/lib/supabase";
 // import { createClient } from "@/lib/serversupabase";
+import { AuthProvider } from "@/context/AuthContext";
 
 export default async function Home() {
   /*   const setNewView = async () => {
@@ -15,7 +16,9 @@ export default async function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between md:p-10">
-      <MonthView />
+      <AuthProvider>
+        <MonthView />
+      </AuthProvider>
     </main>
   );
 }

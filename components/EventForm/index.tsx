@@ -1,4 +1,8 @@
-import { useState, FormEvent } from "react";
+import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+
+import Event from "@/lib/Event";
+
 export type EventData = {
   name: string;
   startTime: string;
@@ -7,8 +11,6 @@ export type EventData = {
 };
 
 type EventFormProps = {
-  // eslint-disable-next-line no-unused-vars
-  onSubmit: (eventData: EventData) => boolean;
   currentDayLabel: string;
   currentDate: string;
 };
@@ -46,21 +48,11 @@ const convertTo24Hour = (time: string) => {
   return hours * 60 + minutes;
 };
 
-const convertForHoursMins = (time: string) => {
-  const [hoursMinutes, period] = time.split(" ");
-  let [hours, minutes] = hoursMinutes.split(":").map(Number);
-  if (period === "PM" && hours !== 12) {
-    hours += 12;
-  } else if (period === "AM" && hours === 12) {
-    hours = 0;
-  }
-  return [hours, minutes];
-};
-
 const CreateEventForm: React.FC<EventFormProps> = ({
   currentDayLabel,
   currentDate,
 }) => {
+  const { session } = useAuth();
   const [name, setName] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -90,19 +82,20 @@ const CreateEventForm: React.FC<EventFormProps> = ({
     }
 
     if (name && startTime && endTime && guests.length > 0) {
-      const [year, month, day] = currentDate.split("-").map(Number); // Assuming currentDay is in "YYYY-MM-DD" format
-      console.log(currentDate, "current date");
-
-      const [startHour, startMinute] = convertForHoursMins(startTime);
-      const startDate = new Date(year, month, day, startHour, startMinute);
-      const startTimeStamp = startDate.getTime();
-      console.log(startTimeStamp, "start time stamp");
-
-      console.log(startHour, startMinute, "start");
-      const [endHour, endMinute] = convertForHoursMins(endTime);
-      const endDate = new Date(year, month, day, endHour, endMinute);
-      const endTimeStamp = endDate.getTime();
-      console.log(endTimeStamp, "end time stamp");
+      const event = new Event(name, currentDate, startTime, endTime, guests);
+      fetch("/events", {
+        method: "POST",
+        body: JSON.stringify({
+          name,
+          user_id: session?.user.id,
+          start_time: event.startTimeStamp,
+          end_time: event.endTimeStamp,
+          guests,
+        }),
+      })
+        .then((res) => res.json())
+        .then((res) => console.log(res, "response from api"));
+      // console.log(event.startTimeStamp, event.endTimeStamp, "event");
     } else {
       alert("Please fill out all fields and add at least one guest.");
     }
