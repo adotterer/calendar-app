@@ -10,8 +10,6 @@ export async function POST(req: NextRequest) {
   const email = String(formData.get("email"));
   const password = String(formData.get("password"));
 
-  console.log(email, password);
-
   const supabase = createRouteHandlerClient({
     cookies: () => cookieStore,
   });
@@ -23,9 +21,13 @@ export async function POST(req: NextRequest) {
 
   if (data) console.log(data);
 
-  if (error) console.log(error);
+  if (error) {
+    return new NextResponse(
+      JSON.stringify({ status: error.status, message: "Invalid Credentials" })
+    );
+  }
 
-  return NextResponse.redirect(url.origin, {
-    status: 301,
-  });
+  return new NextResponse(
+    JSON.stringify({ ok: true, status: 200, message: "Login Successful" })
+  );
 }

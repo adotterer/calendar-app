@@ -15,7 +15,6 @@ export async function POST(req: NextRequest) {
     cookies: () => cookieStore,
   });
 
-  console.log("SIGNUP");
   await supabase.auth.signUp({
     email,
     password,
@@ -24,7 +23,7 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  return NextResponse.redirect(url.origin, {
-    status: 301,
-  });
+  return new NextResponse(
+    JSON.stringify({ ok: true, status: 200, message: "Please check your email to confirm your address." })
+  );
 }

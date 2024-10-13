@@ -6,7 +6,6 @@ export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
 
-  console.log("Callback");
   if (code) {
     const cookieStore = cookies();
 

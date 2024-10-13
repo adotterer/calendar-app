@@ -1,14 +1,22 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { FaChevronRight, FaPlus, FaMinus } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa6";
 import Modal from "../Modal";
 import EventForm from "../EventForm";
-
+import { EventData } from "../EventForm";
 import Calendar from "@/lib/Calendar";
+import { clientSupabase } from "@/lib/supabase";
+import LoginButton from "../AuthForm/button";
+import Loading from "../Loading";
 
 interface CalendarComponentProps {
   date?: Date;
+}
+
+function onSubmit(eventData: EventData) {
+  console.log(eventData);
+  return true;
 }
 
 export default function MonthView({
@@ -17,7 +25,7 @@ export default function MonthView({
   const [calendar, setCalendar] = useState(new Calendar(date));
   const [activeDay, setActiveDay] = useState(new Date().getDate());
   const [creatingEvent, setCreatingEvent] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [calendarModalOpen, setCalendarModalOpen] = useState(false);
 
   const activeWeek = calendar.activeWeek(activeDay);
 
@@ -41,36 +49,38 @@ export default function MonthView({
   return (
     <>
       <div id="calendar-container">
-        <div className="m-4 flex justify-between text-center p-2">
+        <div className="m-4 flex justify-between text-center lg:p-2">
           <h3 className="mx-2 month-label" role="month-label">
-            {calendar.monLabel} {calendar.year}
+            {calendar.month} {calendar.year}
           </h3>
-          <div className="controls" role="controls">
+          <div className="user-controls">
+            <LoginButton />
             <button
               onClick={() => setCreatingEvent((b) => !b)}
-              id="create-event"
-              className="flex items-center"
+              className="flex items-center user-button"
             >
               {creatingEvent ? <FaMinus /> : <FaPlus />} Create Event
             </button>
-            <button
-              onClick={() => {
-                setCreatingEvent(false);
-                setCalendar(calendar.prevMonth);
-              }}
-              role="previous"
-            >
-              <FaChevronLeft />
-            </button>
-            <button
-              onClick={() => {
-                setCreatingEvent(false);
-                setCalendar(calendar.nextMonth);
-              }}
-              role="next"
-            >
-              <FaChevronRight />
-            </button>
+            <div className="month-controls" role="controls">
+              <button
+                onClick={() => {
+                  setCreatingEvent(false);
+                  setCalendar(calendar.prevMonth);
+                }}
+                role="previous"
+              >
+                <FaChevronLeft />
+              </button>
+              <button
+                onClick={() => {
+                  setCreatingEvent(false);
+                  setCalendar(calendar.nextMonth);
+                }}
+                role="next"
+              >
+                <FaChevronRight />
+              </button>
+            </div>
           </div>
         </div>
         <div id="calendar" className="flex flex-wrap">
@@ -97,7 +107,7 @@ export default function MonthView({
               <span>{day}</span>
               {activeDay && creatingEvent ? (
                 <button
-                  onClick={() => setModalOpen(true)}
+                  onClick={() => setCalendarModalOpen(true)}
                   className="select-event-day"
                 >
                   {" "}
@@ -110,10 +120,13 @@ export default function MonthView({
           ))}
         </div>
       </div>
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
+      <Modal
+        isOpen={calendarModalOpen}
+        onClose={() => setCalendarModalOpen(false)}
+      >
         <EventForm
           currentDay={calendar.day + ", " + calendar.month + " " + activeDay}
-          onSubmit={() => null}
+          onSubmit={onSubmit}
         />
       </Modal>
     </>

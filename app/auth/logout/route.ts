@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  const url = new URL(req.url);
+  // const url = new URL(req.url);
 
   const cookieStore = cookies();
 
@@ -12,7 +12,5 @@ export async function GET(req: NextRequest) {
   });
   await supabase.auth.signOut();
 
-  return NextResponse.redirect(url.origin, {
-    status: 301,
-  });
+  return new NextResponse(JSON.stringify({ logout: true }));
 }
