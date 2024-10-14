@@ -9,6 +9,17 @@ import {
 import { clientSupabase } from "@/lib/supabase";
 import { Session } from "@supabase/supabase-js";
 
+interface EventRow {
+  created_at: string;
+  end_time: number;
+  guests: string[];
+  id: number;
+  name: string;
+  start_time: number;
+  user_id: string;
+}
+type EventsRows = EventRow[];
+
 interface LoginSuccessResponse {
   ok: boolean;
   status: 200;
@@ -41,6 +52,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [email, setEmail] = useState<string | null>(null);
+  const [eventRows, setEventRows] = useState<EventRow[] | null>([]);
 
   const getSession = async () => {
     const {
@@ -49,6 +61,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setSession(session || null);
     setEmail(session?.user.email || null);
     setLoading(false);
+    let { data: events, error } = (await clientSupabase
+      .from("events")
+      .select("*")
+      .eq("user_id", session?.user.id)) as {
+      data: EventsRows | null;
+      error: any;
+    };
+    setEventRows(events || null);
+    console.log(events, "user events");
   };
 
   const dispatchLogin = async (
