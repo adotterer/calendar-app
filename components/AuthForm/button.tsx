@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import { useAuth } from "@/context/AuthContext";
 import AuthForm from ".";
