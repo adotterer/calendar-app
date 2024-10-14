@@ -1,5 +1,5 @@
 import { useState, FormEvent } from "react";
-
+import { useAuth } from "@/context/AuthContext";
 import { MdOutlineEmail } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 
@@ -8,6 +8,7 @@ interface LogoutProps {
 }
 
 export default function AuthForm({ closeModal }: LogoutProps) {
+  const { dispatchLogin } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [signUpMessage, setSignUpMessage] = useState("");
@@ -19,13 +20,7 @@ export default function AuthForm({ closeModal }: LogoutProps) {
 
     const url = isSignUp ? "/auth/signup" : "/auth/login"; // Switch between signup and login route
     try {
-      const response = await fetch(url, {
-        method: "POST",
-        body: formData,
-      }).then((res) => {
-        console.log(res, "res");
-        return res.json();
-      });
+      const response = await dispatchLogin(url, formData);
 
       if (isSignUp && response.ok) {
         setSignUpMessage(response.message);

@@ -1,20 +1,15 @@
-import { useCallback } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 interface LogoutProps {
   closeModal: React.Dispatch<React.SetStateAction<void>>;
 }
 
 export default function Logout({ closeModal }: LogoutProps) {
-  const signOut = useCallback(
-    function signOut() {
-      fetch("/auth/logout")
-        .then((res) => res.json())
-        .then(({ logout }) => {
-          if (logout) closeModal();
-        });
-    },
-    [closeModal]
-  );
+  const { dispatchLogout } = useAuth();
+  const signOut = async function signOut() {
+    await dispatchLogout();
+    closeModal();
+  };
 
   return (
     <button

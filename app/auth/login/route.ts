@@ -23,7 +23,11 @@ export async function POST(req: NextRequest) {
 
   if (error) {
     return new NextResponse(
-      JSON.stringify({ status: error.status, message: "Invalid Credentials" })
+      JSON.stringify({
+        ok: false,
+        status: error.status,
+        message: "Invalid Credentials",
+      })
     );
   }
 

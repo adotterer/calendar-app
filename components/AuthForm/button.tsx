@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaRegUser } from "react-icons/fa";
 import { useAuth } from "@/context/AuthContext";
 import AuthForm from ".";
@@ -9,7 +9,7 @@ import Modal from "../Modal";
 const loginMessage = "Login";
 
 export default function LoginButton() {
-  const { session, loading } = useAuth();
+  const { session, loading, email } = useAuth();
   const [loginModalOpen, setLoginModalOpen] = useState<boolean>(false);
 
   if (loading) return <Loading />;
@@ -21,7 +21,7 @@ export default function LoginButton() {
         className="flex items-center user-button"
       >
         <FaRegUser />
-        {session ? session.user.email : loginMessage}
+        {email ? email : loginMessage}
       </button>
       <Modal isOpen={loginModalOpen} onClose={() => setLoginModalOpen(false)}>
         {!session ? (
