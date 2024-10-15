@@ -96,7 +96,9 @@ export default function MonthView({
           <div className="flex justify-center">SAT</div>
           {Array.from({ length: calendar.monthStartsThisDay }, (_, i) => i).map(
             (_, i) => {
-              return <div key={calendar.mon + i} className="day"></div>;
+              return (
+                <div key={calendar.mon + i} className="day empty-day"></div>
+              );
             }
           )}
           {daysArray.map(({ day, activeWeek, activeDay }) => (

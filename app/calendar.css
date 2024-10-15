@@ -33,9 +33,15 @@
 .day {
   height: 80px;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: 8px 14px;
+  /* justify-content: left;
+  align-items: left; */
   border-radius: 12px;
+  background-color: var(--inactive-day-color);
+}
+
+.empty-day {
+  background-color: unset;
 }
 
 .active-week.active-day {
@@ -86,7 +92,13 @@
 
 .select-event-day {
   background-color: var(--bg-color);
-  padding: 14px;
+  /* padding: 14px; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
   border-radius: 50%;
   cursor: pointer;
   border: 2px solid white;

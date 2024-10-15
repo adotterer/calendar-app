@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 
-import Event from "@/lib/Event";
+import CalendarEvent from "@/lib/Event";
 
 export type EventData = {
   name: string;
@@ -82,7 +82,13 @@ const CreateEventForm: React.FC<EventFormProps> = ({
     }
 
     if (name && startTime && endTime && guests.length > 0) {
-      const event = new Event(name, currentDate, startTime, endTime, guests);
+      const event = new CalendarEvent(
+        name,
+        currentDate,
+        startTime,
+        endTime,
+        guests
+      );
       fetch("/events", {
         method: "POST",
         body: JSON.stringify({

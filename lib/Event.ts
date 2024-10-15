@@ -10,7 +10,7 @@ const convertForHoursMins = (time: string) => {
   return [hours, minutes];
 };
 
-export default class Event {
+export default class CalendarEvent {
   name: string;
   date: string; //  "YYYY-MM-DD" format
   startTime: string;
