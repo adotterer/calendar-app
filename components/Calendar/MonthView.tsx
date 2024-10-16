@@ -1,25 +1,14 @@
 "use client";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { FaChevronRight, FaPlus, FaMinus } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa6";
 import Modal from "../Modal";
 import EventForm from "../EventForm";
-import { EventData } from "../EventForm";
 import Calendar from "@/lib/Calendar";
-// import { clientSupabase } from "@/lib/supabase";
 import LoginButton from "../AuthForm/button";
-// import Loading from "../Loading";
 
 interface CalendarComponentProps {
   date?: Date;
-}
-
-function onSubmit(eventData: EventData) {
-  console.log("event data", eventData);
-
-  // add table row here
-
-  return true;
 }
 
 export default function MonthView({
