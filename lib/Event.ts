@@ -10,7 +10,7 @@ const convertForHoursMins = (time: string) => {
   return [hours, minutes];
 };
 
-export default class Event {
+export default class CalendarEvent {
   name: string;
   date: string; //  "YYYY-MM-DD" format
   startTime: string;
@@ -69,11 +69,38 @@ export default class Event {
   }
 }
 
-// timezone:
-/* 
-https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#locales
+export class LocalEvent {
+  name: string;
+  calendarDays: string[];
+  localStartTime: string;
+  localEndTime: string;
 
-https://www.iana.org/time-zones
-*/
+  constructor(name: string, startTime: number, endTime: number) {
+    this.name = name;
+    const startDate = new Date(startTime);
+    const endDate = new Date(endTime);
 
-export function insertEvent() {}
+    this.calendarDays = this.getCalendarDays(startDate, endDate);
+
+    this.localStartTime = startDate.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    this.localEndTime = endDate.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
+
+  private getCalendarDays(startDate: Date, endDate: Date): string[] {
+    const days: string[] = [];
+    const currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      days.push(currentDate.toISOString().split("T")[0]); // Format as "YYYY-MM-DD"
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return days;
+  }
+}

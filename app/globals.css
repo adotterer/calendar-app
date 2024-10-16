@@ -9,7 +9,10 @@
   --background-end-rgb: 12, 12, 12;
   --active-color: #610ee6;
   --active-week-color: #0e0e0e;
+  --inactive-day-color: #151515;
+  --empty-day-color: #222222;
   --bg-color: #201c1c;
+  --event-color: #313131;
 }
 
 body {

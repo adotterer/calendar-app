@@ -1,7 +1,7 @@
 #calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 8px; /* Adjust the gap between the grid items as needed */
+  gap: 8px;
   width: 74vw;
 }
 
@@ -33,9 +33,14 @@
 .day {
   height: 80px;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: 8px 14px;
+  flex-direction: column;
   border-radius: 12px;
+  background-color: var(--inactive-day-color);
+}
+
+.empty-day {
+  background-color: unset;
 }
 
 .active-week.active-day {
@@ -75,7 +80,6 @@
   min-height: 140px;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 20px;
 }
 
 .active-day.creating-event {
@@ -86,8 +90,22 @@
 
 .select-event-day {
   background-color: var(--bg-color);
-  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
   border-radius: 50%;
   cursor: pointer;
   border: 2px solid white;
+}
+
+.event-block {
+  font-size: 0.7em;
+  padding: 2px;
+  padding-left: 4px;
+  background-color: var(--event-color);
+  border-radius: 6px;
+  border: 1px solid var(--event-color);
 }

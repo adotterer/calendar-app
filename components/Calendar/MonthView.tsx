@@ -1,43 +1,32 @@
 "use client";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { FaChevronRight, FaPlus, FaMinus } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa6";
 import Modal from "../Modal";
 import EventForm from "../EventForm";
-import { EventData } from "../EventForm";
 import Calendar from "@/lib/Calendar";
-// import { clientSupabase } from "@/lib/supabase";
 import LoginButton from "../AuthForm/button";
-// import Loading from "../Loading";
+import { useAuth } from "@/context/AuthContext";
+import { LocalEvent } from "@/lib/Event";
 
 interface CalendarComponentProps {
   date?: Date;
 }
 
-function onSubmit(eventData: EventData) {
-  console.log("event data", eventData);
-
-  // add table row here
-
-  return true;
-}
+type CalendarDayEvents = {
+  [day: number]: LocalEvent[];
+};
 
 export default function MonthView({
   date = new Date(),
 }: CalendarComponentProps) {
+  const { email, userEvents } = useAuth();
   const [calendar, setCalendar] = useState(new Calendar(date));
   const [activeDay, setActiveDay] = useState(new Date().getDate());
   const [creatingEvent, setCreatingEvent] = useState(false);
   const [calendarModalOpen, setCalendarModalOpen] = useState(false);
 
   const activeWeek = calendar.activeWeek(activeDay);
-
-  useEffect(() => {
-    if (activeDay > calendar.numOfDaysInMonth) {
-      setActiveDay(calendar.numOfDaysInMonth);
-    }
-  }, [calendar, activeDay]);
-
   const daysArray = Array.from(
     { length: calendar.numOfDaysInMonth },
     (_, i) => {
@@ -48,6 +37,66 @@ export default function MonthView({
       };
     }
   );
+
+  useEffect(() => {
+    if (activeDay > calendar.numOfDaysInMonth) {
+      setActiveDay(calendar.numOfDaysInMonth);
+    }
+  }, [calendar, activeDay]);
+
+  const eventsForThisMonth = useMemo(() => {
+    return userEvents.reduce<CalendarDayEvents>((acc, userEvent) => {
+      userEvent.calendarDays.forEach((curr) => {
+        const [year, month, day] = curr.split("-").map(Number);
+
+        if (calendar.year === year && calendar.mon === month) {
+          if (acc[day]) {
+            acc[day].push(userEvent);
+          } else {
+            acc[day] = [userEvent];
+          }
+        }
+      });
+      return acc;
+    }, {});
+  }, [calendar, userEvents]);
+
+  const daysComponents = useMemo(() => {
+    return daysArray.map(({ day, activeWeek, activeDay }) => {
+      const getClassNames = () => {
+        let classNames = "day";
+        if (activeDay) classNames += " active-day";
+        if (activeWeek) classNames += " active-week";
+        if (creatingEvent && activeWeek) classNames += " creating-event";
+        return classNames;
+      };
+
+      return (
+        <div
+          className={getClassNames()}
+          key={day}
+          onClick={() => setActiveDay(day)}
+        >
+          <div className="flex">{day}</div>
+
+          {eventsForThisMonth[day]?.map((event) => (
+            <div className="flex event-block" key={event.name}>
+              {event.name}
+            </div>
+          ))}
+
+          {activeDay && creatingEvent && (
+            <button
+              onClick={() => setCalendarModalOpen(true)}
+              className="select-event-day"
+            >
+              <FaPlus />
+            </button>
+          )}
+        </div>
+      );
+    });
+  }, [eventsForThisMonth, activeWeek, activeDay, creatingEvent]);
 
   return (
     <>
@@ -96,31 +145,12 @@ export default function MonthView({
           <div className="flex justify-center">SAT</div>
           {Array.from({ length: calendar.monthStartsThisDay }, (_, i) => i).map(
             (_, i) => {
-              return <div key={calendar.mon + i} className="day"></div>;
+              return (
+                <div key={calendar.mon + i} className="day empty-day"></div>
+              );
             }
           )}
-          {daysArray.map(({ day, activeWeek, activeDay }) => (
-            <div
-              className={`day ${activeDay ? "active-day" : ""} ${
-                activeWeek ? "active-week" : ""
-              } ${creatingEvent && activeWeek ? "creating-event" : ""}`}
-              key={day}
-              onClick={() => setActiveDay(day)}
-            >
-              <span>{day}</span>
-              {activeDay && creatingEvent ? (
-                <button
-                  onClick={() => setCalendarModalOpen(true)}
-                  className="select-event-day"
-                >
-                  {" "}
-                  <FaPlus />
-                </button>
-              ) : (
-                ""
-              )}
-            </div>
-          ))}
+          {daysComponents}
         </div>
       </div>
       <Modal
