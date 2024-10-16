@@ -34,8 +34,7 @@
   height: 80px;
   display: flex;
   padding: 8px 14px;
-  /* justify-content: left;
-  align-items: left; */
+  flex-direction: column;
   border-radius: 12px;
   background-color: var(--inactive-day-color);
 }
@@ -100,4 +99,13 @@
   border-radius: 50%;
   cursor: pointer;
   border: 2px solid white;
+}
+
+.event-block {
+  font-size: 0.7em;
+  padding: 2px;
+  padding-left: 4px;
+  background-color: var(--event-color);
+  border-radius: 6px;
+  border: 1px solid var(--event-color);
 }

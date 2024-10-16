@@ -5,9 +5,11 @@ import {
   useState,
   useEffect,
   ReactNode,
+  useMemo,
 } from "react";
 import { clientSupabase } from "@/lib/supabase";
 import { Session } from "@supabase/supabase-js";
+import { LocalEvent } from "@/lib/Event";
 
 interface EventRow {
   created_at: string;
@@ -40,6 +42,7 @@ interface AuthContextType {
   dispatchLogin: (url: string, formData: FormData) => Promise<LoginResponse>;
   dispatchLogout: () => Promise<boolean>;
   email: string | null;
+  userEvents: LocalEvent[];
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -52,7 +55,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [email, setEmail] = useState<string | null>(null);
-  const [eventRows, setEventRows] = useState<EventRow[] | null>([]);
+  // const [eventRows, setEventRows] = useState<EventRow[] | null>([]);
+  const [userEvents, setUserEvents] = useState<LocalEvent[]>([]);
+
+  // const userEvents = useMemo(() => {
+  //   const events: LocalEvent[] = [];
+
+  //   return events;
+  // }, [eventRows]);
 
   const getSession = async () => {
     const {
@@ -68,8 +78,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       data: EventsRows | null;
       error: any;
     };
-    setEventRows(events || null);
-    console.log(events, "user events");
+    // setEventRows(events || null);
+    if (events) {
+      const es: LocalEvent[] = [];
+      events?.forEach(({ name, start_time, end_time }) => {
+        es.push(new LocalEvent(name, start_time, end_time));
+      });
+      // console.log(es, "es");
+      setUserEvents(es);
+    }
   };
 
   const dispatchLogin = async (
@@ -102,8 +119,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   useEffect(() => {
-    getSession();
-
     const {
       data: { subscription },
     } = clientSupabase.auth.onAuthStateChange(() => {
@@ -123,6 +138,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         email,
         dispatchLogin,
         dispatchLogout,
+        userEvents,
       }}
     >
       {children}
