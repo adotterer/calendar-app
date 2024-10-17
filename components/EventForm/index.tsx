@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
-
 import { convertForHoursMins } from "@/lib/Event";
 
 export type EventData = {
@@ -11,7 +10,6 @@ export type EventData = {
 };
 
 type EventFormProps = {
-  currentDayLabel: string;
   currentDate: string;
 };
 
@@ -45,10 +43,7 @@ const convertTo24Hour = (time: string) => {
   return hours * 60 + minutes;
 };
 
-const CreateEventForm: React.FC<EventFormProps> = ({
-  currentDayLabel,
-  currentDate,
-}) => {
+const CreateEventForm: React.FC<EventFormProps> = ({ currentDate }) => {
   const { session, email } = useAuth();
   const [name, setName] = useState("");
   const [startDate, setStartDate] = useState(currentDate);
@@ -121,7 +116,6 @@ const CreateEventForm: React.FC<EventFormProps> = ({
         })
           .then((res) => res.json())
           .then((res) => console.log(res, "response from api"));
-        // console.log(event.startTimeStamp, event.endTimeStamp, "event");
       } else {
         alert("Please fill out all fields and add at least one guest.");
       }

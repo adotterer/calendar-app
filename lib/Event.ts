@@ -10,66 +10,6 @@ export const convertForHoursMins = (time: string) => {
   return [hours, minutes];
 };
 
-/* export default class CalendarEvent {
-  name: string;
-  date: string; //  "YYYY-MM-DD" format
-  startTime: string;
-  endTime: string;
-  guests: Array<string>;
-  year: number;
-  month: number;
-  day: number;
-  startHour: number;
-  startMinute: number;
-  endHour: number;
-  endMinute: number;
-
-  constructor(
-    name: string,
-    date: string,
-    startTime: string, // example: "10:30 PM"
-    endTime: string, //  example: "11:00 PM"
-    guests: Array<string>
-  ) {
-    this.name = name;
-    this.date = date;
-    this.startTime = startTime;
-    this.endTime = endTime;
-    this.guests = guests;
-    [this.year, this.month, this.day] = this.date.split("-").map(Number);
-    [this.startHour, this.startMinute] = convertForHoursMins(this.startTime);
-    [this.endHour, this.endMinute] = convertForHoursMins(this.endTime);
-    console.log(this.month, "month?", this.day, "day");
-  }
-
-  get startDate() {
-    return new Date(
-      this.year,
-      this.month - 1, // month INDEX
-      this.day,
-      this.startHour,
-      this.startMinute
-    );
-  }
-
-  get endDate() {
-    return new Date(
-      this.year,
-      this.month - 1, // month INDEX
-      this.day,
-      this.endHour,
-      this.endMinute
-    );
-  }
-  get startTimeStamp() {
-    return this.startDate.getTime();
-  }
-
-  get endTimeStamp() {
-    return this.endDate.getTime();
-  }
-}
- */
 export class LocalEvent {
   name: string;
   calendarDays: string[];
