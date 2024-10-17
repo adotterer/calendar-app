@@ -7,6 +7,7 @@ import EventForm from "../EventForm";
 import Calendar from "@/lib/Calendar";
 import LoginButton from "../AuthForm/button";
 import { useAuth } from "@/context/AuthContext";
+import { useView } from "@/context/ViewContext";
 import { LocalEvent } from "@/lib/Event";
 
 interface CalendarComponentProps {
@@ -21,6 +22,7 @@ export default function MonthView({
   date = new Date(),
 }: CalendarComponentProps) {
   const { userEvents } = useAuth();
+  const { setView } = useView();
   const [calendar, setCalendar] = useState(new Calendar(date));
   const [activeDay, setActiveDay] = useState(new Date().getDate());
   const [creatingEvent, setCreatingEvent] = useState(false);
@@ -80,7 +82,14 @@ export default function MonthView({
           <div className="flex">{day}</div>
 
           {eventsForThisMonth[day]?.map((event) => (
-            <div className="flex event-block" key={event.name}>
+            <div
+              onClick={() => {
+                console.log("changing view");
+                setView("day");
+              }}
+              className="flex event-block cursor-pointer"
+              key={event.name}
+            >
               {event.name}
             </div>
           ))}
