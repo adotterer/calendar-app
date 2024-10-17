@@ -1,4 +1,4 @@
-const convertForHoursMins = (time: string) => {
+export const convertForHoursMins = (time: string) => {
   // time: "10:00 PM"
   const [hoursMinutes, period] = time.split(" ");
   let [hours, minutes] = hoursMinutes.split(":").map(Number);
@@ -10,7 +10,7 @@ const convertForHoursMins = (time: string) => {
   return [hours, minutes];
 };
 
-export default class CalendarEvent {
+/* export default class CalendarEvent {
   name: string;
   date: string; //  "YYYY-MM-DD" format
   startTime: string;
@@ -69,15 +69,19 @@ export default class CalendarEvent {
     return this.endDate.getTime();
   }
 }
-
+ */
 export class LocalEvent {
   name: string;
   calendarDays: string[];
+  startTimeStamp: number;
+  endTimeStamp: number;
   localStartTime: string;
   localEndTime: string;
 
   constructor(name: string, startTime: number, endTime: number) {
     this.name = name;
+    this.startTimeStamp = startTime;
+    this.endTimeStamp = endTime;
     const startDate = new Date(startTime);
     const endDate = new Date(endTime);
 

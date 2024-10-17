@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 
-import CalendarEvent from "@/lib/Event";
+import { convertForHoursMins } from "@/lib/Event";
 
 export type EventData = {
   name: string;
@@ -59,6 +59,7 @@ const CreateEventForm: React.FC<EventFormProps> = ({
   const [guests, setGuests] = useState<string[]>(email ? [email] : []);
 
   useEffect(() => {
+    console.log(startDate, endDate, "?");
     if (new Date(endDate) < new Date(startDate)) {
       setEndDate(startDate);
     }
@@ -81,34 +82,45 @@ const CreateEventForm: React.FC<EventFormProps> = ({
     (e: React.FormEvent) => {
       e.preventDefault();
 
-      // Validation: Check if the end time is after the start time
       if (convertTo24Hour(endTime) <= convertTo24Hour(startTime)) {
         alert("End time must be after the start time.");
         return;
       }
 
       if (name && startTime && endTime && guests.length > 0) {
-        // const event = new CalendarEvent(
-        //   name,
-        //   currentDate,
-        //   startTime,
-        //   endTime,
-        //   guests
-        // );
-        // console.log(event, "event, ???? not right");
-        // console.log(event.startTimeStamp)
-        // fetch("/events", {
-        //   method: "POST",
-        //   body: JSON.stringify({
-        //     name,
-        //     user_id: session?.user.id,
-        //     start_time: event.startTimeStamp,
-        //     end_time: event.endTimeStamp,
-        //     guests,
-        //   }),
-        // })
-        //   .then((res) => res.json())
-        //   .then((res) => console.log(res, "response from api"));
+        const [startYear, startMonth, startDay] = startDate
+          .split("-")
+          .map(Number);
+        const [endYear, endMonth, endDay] = endDate.split("-").map(Number);
+        const [startHour, startMin] = convertForHoursMins(startTime);
+        const [endHour, endMin] = convertForHoursMins(endTime);
+        const startDateApi = new Date(
+          startYear,
+          startMonth - 1,
+          startDay,
+          startHour,
+          startMin
+        );
+
+        const endDateApi = new Date(
+          endYear,
+          endMonth - 1,
+          endDay,
+          endHour,
+          endMin
+        );
+        fetch("/events", {
+          method: "POST",
+          body: JSON.stringify({
+            name,
+            user_id: session?.user.id,
+            start_time: startDateApi.getTime(),
+            end_time: endDateApi.getTime(),
+            guests,
+          }),
+        })
+          .then((res) => res.json())
+          .then((res) => console.log(res, "response from api"));
         // console.log(event.startTimeStamp, event.endTimeStamp, "event");
       } else {
         alert("Please fill out all fields and add at least one guest.");
