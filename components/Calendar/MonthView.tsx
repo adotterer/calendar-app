@@ -20,7 +20,7 @@ type CalendarDayEvents = {
 export default function MonthView({
   date = new Date(),
 }: CalendarComponentProps) {
-  const { email, userEvents } = useAuth();
+  const { userEvents } = useAuth();
   const [calendar, setCalendar] = useState(new Calendar(date));
   const [activeDay, setActiveDay] = useState(new Date().getDate());
   const [creatingEvent, setCreatingEvent] = useState(false);
