@@ -5,7 +5,6 @@ import {
   useState,
   useEffect,
   ReactNode,
-  useMemo,
 } from "react";
 import { clientSupabase } from "@/lib/supabase";
 import { Session } from "@supabase/supabase-js";

@@ -23,10 +23,6 @@ export default class Calendar {
     this.monthStartsThisDay = this.firstOfThisMonth.getDay();
   }
 
-  // get dateFormat() {
-  //   return `${this.year}-${this.mon}-${this.dayNumber}`;
-  // }
-
   get prevMonth() {
     const prevMonth = this.mon - 1 > 0 ? this.mon - 1 : 12;
     const year = prevMonth !== 12 ? this.year : this.year - 1;
