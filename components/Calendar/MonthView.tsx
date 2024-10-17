@@ -159,9 +159,7 @@ export default function MonthView({
       >
         <EventForm
           currentDate={`${calendar.year}-${calendar.mon}-${activeDay}`}
-          currentDayLabel={
-            calendar.day + ", " + calendar.month + " " + activeDay
-          }
+          currentDayLabel={calendar.month + " " + activeDay}
         />
       </Modal>
     </>

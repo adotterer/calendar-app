@@ -105,6 +105,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       .then(({ logout }) => {
         setEmail(null);
         setSession(null);
+        setUserEvents([]);
         return logout;
       });
   };

@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 
 import CalendarEvent from "@/lib/Event";
@@ -15,7 +15,6 @@ type EventFormProps = {
   currentDate: string;
 };
 
-// Generate times in 30-minute intervals
 const generateTimes = () => {
   const times: string[] = [];
   const startHour = 0;
@@ -27,7 +26,6 @@ const generateTimes = () => {
   return times;
 };
 
-// Format the time to 12-hour AM/PM format
 const formatTime = (hour: number, minute: number): string => {
   const isPM = hour >= 12;
   const displayHour = hour % 12 || 12;
@@ -36,7 +34,6 @@ const formatTime = (hour: number, minute: number): string => {
   return `${displayHour}:${displayMinute} ${period}`;
 };
 
-// Convert 12-hour time to 24-hour time for comparison
 const convertTo24Hour = (time: string) => {
   const [hoursMinutes, period] = time.split(" ");
   let [hours, minutes] = hoursMinutes.split(":").map(Number);
@@ -54,10 +51,18 @@ const CreateEventForm: React.FC<EventFormProps> = ({
 }) => {
   const { session, email } = useAuth();
   const [name, setName] = useState("");
+  const [startDate, setStartDate] = useState(currentDate);
+  const [endDate, setEndDate] = useState(currentDate);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
   const [guests, setGuests] = useState<string[]>(email ? [email] : []);
+
+  useEffect(() => {
+    if (new Date(endDate) < new Date(startDate)) {
+      setEndDate(startDate);
+    }
+  }, [startDate, endDate]);
 
   const times = generateTimes();
 
@@ -83,27 +88,27 @@ const CreateEventForm: React.FC<EventFormProps> = ({
       }
 
       if (name && startTime && endTime && guests.length > 0) {
-        const event = new CalendarEvent(
-          name,
-          currentDate,
-          startTime,
-          endTime,
-          guests
-        );
-        console.log(event, "event, ???? not right");
-        console.log(event.startTimeStamp)
-        fetch("/events", {
-          method: "POST",
-          body: JSON.stringify({
-            name,
-            user_id: session?.user.id,
-            start_time: event.startTimeStamp,
-            end_time: event.endTimeStamp,
-            guests,
-          }),
-        })
-          .then((res) => res.json())
-          .then((res) => console.log(res, "response from api"));
+        // const event = new CalendarEvent(
+        //   name,
+        //   currentDate,
+        //   startTime,
+        //   endTime,
+        //   guests
+        // );
+        // console.log(event, "event, ???? not right");
+        // console.log(event.startTimeStamp)
+        // fetch("/events", {
+        //   method: "POST",
+        //   body: JSON.stringify({
+        //     name,
+        //     user_id: session?.user.id,
+        //     start_time: event.startTimeStamp,
+        //     end_time: event.endTimeStamp,
+        //     guests,
+        //   }),
+        // })
+        //   .then((res) => res.json())
+        //   .then((res) => console.log(res, "response from api"));
         // console.log(event.startTimeStamp, event.endTimeStamp, "event");
       } else {
         alert("Please fill out all fields and add at least one guest.");
@@ -124,7 +129,15 @@ const CreateEventForm: React.FC<EventFormProps> = ({
         />
       </div>
 
-      <div>{currentDayLabel}</div>
+      <div>
+        <label>Start Date</label>
+        <input
+          onChange={(e) => setStartDate(e.target.value)}
+          value={startDate}
+          type="date"
+          required
+        />
+      </div>
       <div>
         <label>Start Time</label>
         <select
@@ -143,6 +156,15 @@ const CreateEventForm: React.FC<EventFormProps> = ({
         </select>
       </div>
 
+      <div>
+        <label>End Date</label>
+        <input
+          onChange={(e) => setEndDate(e.target.value)}
+          value={endDate}
+          type="date"
+          required
+        />
+      </div>
       <div>
         <label>End Time</label>
         <select
