@@ -55,14 +55,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [email, setEmail] = useState<string | null>(null);
-  // const [eventRows, setEventRows] = useState<EventRow[] | null>([]);
   const [userEvents, setUserEvents] = useState<LocalEvent[]>([]);
-
-  // const userEvents = useMemo(() => {
-  //   const events: LocalEvent[] = [];
-
-  //   return events;
-  // }, [eventRows]);
 
   const getSession = async () => {
     const {
@@ -78,13 +71,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       data: EventsRows | null;
       error: any;
     };
-    // setEventRows(events || null);
     if (events) {
       const es: LocalEvent[] = [];
       events?.forEach(({ name, start_time, end_time }) => {
         es.push(new LocalEvent(name, start_time, end_time));
       });
-      // console.log(es, "es");
       setUserEvents(es);
     }
   };
@@ -114,6 +105,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       .then(({ logout }) => {
         setEmail(null);
         setSession(null);
+        setUserEvents([]);
         return logout;
       });
   };

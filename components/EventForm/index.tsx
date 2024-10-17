@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
-
-import CalendarEvent from "@/lib/Event";
+import { convertForHoursMins } from "@/lib/Event";
 
 export type EventData = {
   name: string;
@@ -11,11 +10,9 @@ export type EventData = {
 };
 
 type EventFormProps = {
-  currentDayLabel: string;
   currentDate: string;
 };
 
-// Generate times in 30-minute intervals
 const generateTimes = () => {
   const times: string[] = [];
   const startHour = 0;
@@ -27,7 +24,6 @@ const generateTimes = () => {
   return times;
 };
 
-// Format the time to 12-hour AM/PM format
 const formatTime = (hour: number, minute: number): string => {
   const isPM = hour >= 12;
   const displayHour = hour % 12 || 12;
@@ -36,7 +32,6 @@ const formatTime = (hour: number, minute: number): string => {
   return `${displayHour}:${displayMinute} ${period}`;
 };
 
-// Convert 12-hour time to 24-hour time for comparison
 const convertTo24Hour = (time: string) => {
   const [hoursMinutes, period] = time.split(" ");
   let [hours, minutes] = hoursMinutes.split(":").map(Number);
@@ -48,16 +43,22 @@ const convertTo24Hour = (time: string) => {
   return hours * 60 + minutes;
 };
 
-const CreateEventForm: React.FC<EventFormProps> = ({
-  currentDayLabel,
-  currentDate,
-}) => {
-  const { session } = useAuth();
+const CreateEventForm: React.FC<EventFormProps> = ({ currentDate }) => {
+  const { session, email } = useAuth();
   const [name, setName] = useState("");
+  const [startDate, setStartDate] = useState(currentDate);
+  const [endDate, setEndDate] = useState(currentDate);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
-  const [guests, setGuests] = useState<string[]>([]);
+  const [guests, setGuests] = useState<string[]>(email ? [email] : []);
+
+  useEffect(() => {
+    console.log(startDate, endDate, "?");
+    if (new Date(endDate) < new Date(startDate)) {
+      setEndDate(startDate);
+    }
+  }, [startDate, endDate]);
 
   const times = generateTimes();
 
@@ -72,40 +73,55 @@ const CreateEventForm: React.FC<EventFormProps> = ({
     setGuests(guests.filter((guest) => guest !== email));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
 
-    // Validation: Check if the end time is after the start time
-    if (convertTo24Hour(endTime) <= convertTo24Hour(startTime)) {
-      alert("End time must be after the start time.");
-      return;
-    }
+      if (convertTo24Hour(endTime) <= convertTo24Hour(startTime)) {
+        alert("End time must be after the start time.");
+        return;
+      }
 
-    if (name && startTime && endTime && guests.length > 0) {
-      const event = new CalendarEvent(
-        name,
-        currentDate,
-        startTime,
-        endTime,
-        guests
-      );
-      fetch("/events", {
-        method: "POST",
-        body: JSON.stringify({
-          name,
-          user_id: session?.user.id,
-          start_time: event.startTimeStamp,
-          end_time: event.endTimeStamp,
-          guests,
-        }),
-      })
-        .then((res) => res.json())
-        .then((res) => console.log(res, "response from api"));
-      // console.log(event.startTimeStamp, event.endTimeStamp, "event");
-    } else {
-      alert("Please fill out all fields and add at least one guest.");
-    }
-  };
+      if (name && startTime && endTime && guests.length > 0) {
+        const [startYear, startMonth, startDay] = startDate
+          .split("-")
+          .map(Number);
+        const [endYear, endMonth, endDay] = endDate.split("-").map(Number);
+        const [startHour, startMin] = convertForHoursMins(startTime);
+        const [endHour, endMin] = convertForHoursMins(endTime);
+        const startDateApi = new Date(
+          startYear,
+          startMonth - 1,
+          startDay,
+          startHour,
+          startMin
+        );
+
+        const endDateApi = new Date(
+          endYear,
+          endMonth - 1,
+          endDay,
+          endHour,
+          endMin
+        );
+        fetch("/events", {
+          method: "POST",
+          body: JSON.stringify({
+            name,
+            user_id: session?.user.id,
+            start_time: startDateApi.getTime(),
+            end_time: endDateApi.getTime(),
+            guests,
+          }),
+        })
+          .then((res) => res.json())
+          .then((res) => console.log(res, "response from api"));
+      } else {
+        alert("Please fill out all fields and add at least one guest.");
+      }
+    },
+    [currentDate, startTime, endTime]
+  );
 
   return (
     <form onSubmit={handleSubmit}>
@@ -119,7 +135,15 @@ const CreateEventForm: React.FC<EventFormProps> = ({
         />
       </div>
 
-      <div>{currentDayLabel}</div>
+      <div>
+        <label>Start Date</label>
+        <input
+          onChange={(e) => setStartDate(e.target.value)}
+          value={startDate}
+          type="date"
+          required
+        />
+      </div>
       <div>
         <label>Start Time</label>
         <select
@@ -138,6 +162,15 @@ const CreateEventForm: React.FC<EventFormProps> = ({
         </select>
       </div>
 
+      <div>
+        <label>End Date</label>
+        <input
+          onChange={(e) => setEndDate(e.target.value)}
+          value={endDate}
+          type="date"
+          required
+        />
+      </div>
       <div>
         <label>End Time</label>
         <select
