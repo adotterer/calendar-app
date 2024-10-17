@@ -85,7 +85,7 @@
 .active-day.creating-event {
   flex-direction: column;
   border: 2px solid white;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 }
 
 .select-event-day {
@@ -99,6 +99,7 @@
   border-radius: 50%;
   cursor: pointer;
   border: 2px solid white;
+  margin-top: 10px;
 }
 
 .event-block {

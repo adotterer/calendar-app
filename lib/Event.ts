@@ -39,12 +39,13 @@ export default class CalendarEvent {
     [this.year, this.month, this.day] = this.date.split("-").map(Number);
     [this.startHour, this.startMinute] = convertForHoursMins(this.startTime);
     [this.endHour, this.endMinute] = convertForHoursMins(this.endTime);
+    console.log(this.month, "month?", this.day, "day");
   }
 
   get startDate() {
     return new Date(
       this.year,
-      this.month,
+      this.month - 1, // month INDEX
       this.day,
       this.startHour,
       this.startMinute
@@ -54,7 +55,7 @@ export default class CalendarEvent {
   get endDate() {
     return new Date(
       this.year,
-      this.month,
+      this.month - 1, // month INDEX
       this.day,
       this.endHour,
       this.endMinute
@@ -97,7 +98,13 @@ export class LocalEvent {
     const currentDate = new Date(startDate);
 
     while (currentDate <= endDate) {
-      days.push(currentDate.toISOString().split("T")[0]); // Format as "YYYY-MM-DD"
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+      const day = String(currentDate.getDate()).padStart(2, "0");
+
+      const localFormattedDate = `${year}-${month}-${day}`; // "YYYY-MM-DD" format
+
+      days.push(localFormattedDate);
       currentDate.setDate(currentDate.getDate() + 1);
     }
 

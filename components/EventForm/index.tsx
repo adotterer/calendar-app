@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useAuth } from "@/context/AuthContext";
 
 import CalendarEvent from "@/lib/Event";
@@ -52,12 +52,12 @@ const CreateEventForm: React.FC<EventFormProps> = ({
   currentDayLabel,
   currentDate,
 }) => {
-  const { session } = useAuth();
+  const { session, email } = useAuth();
   const [name, setName] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
-  const [guests, setGuests] = useState<string[]>([]);
+  const [guests, setGuests] = useState<string[]>(email ? [email] : []);
 
   const times = generateTimes();
 
@@ -72,40 +72,45 @@ const CreateEventForm: React.FC<EventFormProps> = ({
     setGuests(guests.filter((guest) => guest !== email));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
 
-    // Validation: Check if the end time is after the start time
-    if (convertTo24Hour(endTime) <= convertTo24Hour(startTime)) {
-      alert("End time must be after the start time.");
-      return;
-    }
+      // Validation: Check if the end time is after the start time
+      if (convertTo24Hour(endTime) <= convertTo24Hour(startTime)) {
+        alert("End time must be after the start time.");
+        return;
+      }
 
-    if (name && startTime && endTime && guests.length > 0) {
-      const event = new CalendarEvent(
-        name,
-        currentDate,
-        startTime,
-        endTime,
-        guests
-      );
-      fetch("/events", {
-        method: "POST",
-        body: JSON.stringify({
+      if (name && startTime && endTime && guests.length > 0) {
+        const event = new CalendarEvent(
           name,
-          user_id: session?.user.id,
-          start_time: event.startTimeStamp,
-          end_time: event.endTimeStamp,
-          guests,
-        }),
-      })
-        .then((res) => res.json())
-        .then((res) => console.log(res, "response from api"));
-      // console.log(event.startTimeStamp, event.endTimeStamp, "event");
-    } else {
-      alert("Please fill out all fields and add at least one guest.");
-    }
-  };
+          currentDate,
+          startTime,
+          endTime,
+          guests
+        );
+        console.log(event, "event, ???? not right");
+        console.log(event.startTimeStamp)
+        fetch("/events", {
+          method: "POST",
+          body: JSON.stringify({
+            name,
+            user_id: session?.user.id,
+            start_time: event.startTimeStamp,
+            end_time: event.endTimeStamp,
+            guests,
+          }),
+        })
+          .then((res) => res.json())
+          .then((res) => console.log(res, "response from api"));
+        // console.log(event.startTimeStamp, event.endTimeStamp, "event");
+      } else {
+        alert("Please fill out all fields and add at least one guest.");
+      }
+    },
+    [currentDate, startTime, endTime]
+  );
 
   return (
     <form onSubmit={handleSubmit}>
