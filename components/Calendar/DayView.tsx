@@ -70,7 +70,7 @@ export default function DayView() {
       <div className="day-weekdays">
         {activeWeek.map((day) => {
           return (
-            <div>
+            <div key={day + "-day-label"}>
               <span
                 onClick={() => setActiveDay(day)}
                 className={`${

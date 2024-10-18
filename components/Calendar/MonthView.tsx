@@ -106,7 +106,6 @@ export default function MonthView() {
             <div
               onClick={() => {
                 setView("day");
-                localStorage.setItem("current-day", "day");
               }}
               className="flex event-block cursor-pointer"
               key={event.name}

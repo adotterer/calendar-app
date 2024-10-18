@@ -15,9 +15,9 @@ interface ViewProviderProps {
 }
 
 interface ViewContextType {
-  view: "month" | "day";
+  view: "month" | "day" | null;
   activeDate: Date;
-  setView: Dispatch<SetStateAction<"month" | "day">>;
+  setView: Dispatch<SetStateAction<"month" | "day" | null>>;
   setActiveDate: Dispatch<SetStateAction<Date>>;
   calendar: Calendar;
   setCalendar: Dispatch<SetStateAction<Calendar>>;
@@ -30,18 +30,26 @@ const ViewContext = createContext<ViewContextType | undefined>(undefined);
 
 export const ViewProvider = ({ children }: ViewProviderProps) => {
   const today = new Date();
-  const [view, setView] = useState<"month" | "day">("month");
+  const [view, setView] = useState<"month" | "day" | null>(null);
   const [activeDate, setActiveDate] = useState(today);
   const [calendar, setCalendar] = useState(new Calendar(today));
   const [activeDay, setActiveDay] = useState(today.getDate());
   const activeWeek = calendar.activeWeek(activeDay);
 
   useEffect(() => {
-    setView(localStorage.getItem("current-view") as "month" | "day");
+    const storedView = localStorage.getItem("current-view");
+    if (storedView) {
+      setView(storedView as "month" | "day");
+    } else {
+      setView("month");
+    }
   }, []);
-  //   useEffect(() => {
-  //     localStorage.setItem("current-view", view);
-  //   }, [view]);
+
+  useEffect(() => {
+    if (view && view !== localStorage.getItem("current-view")) {
+      localStorage.setItem("current-view", view);
+    }
+  }, [view]);
 
   return (
     <ViewContext.Provider
