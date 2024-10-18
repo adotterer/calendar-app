@@ -1,0 +1,91 @@
+#day-view {
+  width: 74vw;
+}
+.month-view-button {
+  font-size: 1.2em;
+}
+
+.day-nav {
+  padding: 8px;
+}
+
+.active-day-label {
+  border-bottom: 1px solid var(--border-accent-color);
+  padding: 10px;
+}
+.day-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin: 12px 0;
+}
+.day-weekdays > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.day-times {
+  margin-top: 30px;
+  max-height: 60vh;
+  padding-top: 20px;
+  overflow-y: scroll;
+}
+
+.day-times .hour {
+  height: 80px;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+}
+
+.current-time-indicator {
+  position: absolute;
+  top: 0;
+  left: 0px;
+  right: 0;
+  height: 2px;
+  background-color: var(--active-color-light);
+}
+
+.current-time {
+  display: flex;
+}
+.current-time-label {
+  color: var(--active-color-light);
+  font-size: 0.8em;
+  width: 78px;
+  display: flex;
+  justify-content: center;
+  z-index: 10;
+  border-top: 2px solid var(--active-color-light);
+  background-color: var(--bg-color-transparent);
+  /* border-right: 1px solid var(--active-color-light);
+  border-left: 1px solid var(--active-color-light);
+  border-bottom: 1px solid var(--active-color-light); */
+}
+
+.hour-block {
+  width: 100%;
+  border-top: 1px solid white;
+}
+
+.day-times .hour-label {
+  height: 100%;
+  width: 80px;
+  display: flex;
+  justify-content: center;
+  margin-top: -10px;
+}
+
+.day-weekdays span.day-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
+
+.day-active {
+  background-color: var(--active-color);
+}

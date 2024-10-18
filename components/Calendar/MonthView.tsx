@@ -4,35 +4,58 @@ import { FaChevronRight, FaPlus, FaMinus } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa6";
 import Modal from "../Modal";
 import EventForm from "../EventForm";
-import Calendar from "@/lib/Calendar";
 import LoginButton from "../AuthForm/button";
 import { useAuth } from "@/context/AuthContext";
+import { useView } from "@/context/ViewContext";
 import { LocalEvent } from "@/lib/Event";
-
-interface CalendarComponentProps {
-  date?: Date;
-}
 
 type CalendarDayEvents = {
   [day: number]: LocalEvent[];
 };
 
-export default function MonthView({
-  date = new Date(),
-}: CalendarComponentProps) {
-  const { email, userEvents } = useAuth();
-  const [calendar, setCalendar] = useState(new Calendar(date));
-  const [activeDay, setActiveDay] = useState(new Date().getDate());
+export default function MonthView() {
+  const { userEvents } = useAuth();
+  const {
+    setView,
+    calendar,
+    setCalendar,
+    activeDay,
+    setActiveDay,
+    activeWeek,
+  } = useView();
+
   const [creatingEvent, setCreatingEvent] = useState(false);
   const [calendarModalOpen, setCalendarModalOpen] = useState(false);
 
-  const activeWeek = calendar.activeWeek(activeDay);
+  const highlightedWeek = useMemo(() => {
+    const highlightedDays: number[] = [];
+
+    const isSequential = activeWeek.every((day, index) => {
+      if (index === 0) return true;
+      return day === activeWeek[index - 1] + 1;
+    });
+
+    if (!isSequential) {
+      activeWeek.forEach((day) => {
+        if (activeDay > 20 && day > 20) {
+          highlightedDays.push(day);
+        } else if (activeDay < 10 && day < 10) {
+          highlightedDays.push(day);
+        }
+      });
+    } else {
+      return activeWeek;
+    }
+
+    return highlightedDays;
+  }, [activeDay, activeWeek]);
+
   const daysArray = Array.from(
     { length: calendar.numOfDaysInMonth },
     (_, i) => {
       return {
         day: i + 1,
-        activeWeek: activeWeek.includes(i + 1),
+        activeWeek: highlightedWeek.includes(i + 1),
         activeDay: i + 1 === activeDay,
       };
     }
@@ -80,7 +103,13 @@ export default function MonthView({
           <div className="flex">{day}</div>
 
           {eventsForThisMonth[day]?.map((event) => (
-            <div className="flex event-block" key={event.name}>
+            <div
+              onClick={() => {
+                setView("day");
+              }}
+              className="flex event-block cursor-pointer"
+              key={event.name}
+            >
               {event.name}
             </div>
           ))}

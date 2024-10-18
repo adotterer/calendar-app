@@ -23,10 +23,6 @@ export default class Calendar {
     this.monthStartsThisDay = this.firstOfThisMonth.getDay();
   }
 
-  // get dateFormat() {
-  //   return `${this.year}-${this.mon}-${this.dayNumber}`;
-  // }
-
   get prevMonth() {
     const prevMonth = this.mon - 1 > 0 ? this.mon - 1 : 12;
     const year = prevMonth !== 12 ? this.year : this.year - 1;
@@ -74,14 +70,35 @@ export default class Calendar {
 
     const activeSunday = this.sundays[activeIndex];
 
-    const week =
+    let week =
       activeIndex >= 0
         ? Array.from({ length: 7 }, (_, i) => {
-            return i + activeSunday;
+            const day = i + activeSunday;
+            return day > this.numOfDaysInMonth
+              ? day - this.numOfDaysInMonth
+              : day;
           })
-        : Array.from({ length: this.sundays[0] - 1 }, (_, i) => {
-            return i + 1;
-          });
+        : Array.from({ length: this.sundays[0] - 1 }, (_, i) => i + 1);
+
+    const daysFromNextMonth = week.filter((day) => day <= 0).length;
+    if (daysFromNextMonth > 0) {
+      const nextMonthDays = this.nextMonth;
+      week = week.map((day) =>
+        day <= 0 ? nextMonthDays.dayNumber + day : day
+      );
+    }
+
+    if (week.length < 7) {
+      const prevMonth = this.prevMonth;
+      const daysToFill = 7 - week.length;
+
+      const prevMonthDays = Array.from(
+        { length: daysToFill },
+        (_, i) => prevMonth.numOfDaysInMonth - daysToFill + i + 1
+      );
+
+      week = [...prevMonthDays, ...week];
+    }
 
     return week;
   }
