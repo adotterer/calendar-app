@@ -120,7 +120,7 @@ const CreateEventForm: React.FC<EventFormProps> = ({ currentDate }) => {
         alert("Please fill out all fields and add at least one guest.");
       }
     },
-    [currentDate, startTime, endTime]
+    [startTime, endTime, endDate, guests, name, session?.user.id, startDate]
   );
 
   return (

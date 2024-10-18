@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const userId = url.searchParams.get("id");
 
-  let { data: events, error } = await supabase
+  let { data: events } = await supabase
     .from("events")
     .select("*")
     .eq("user_id", userId);
