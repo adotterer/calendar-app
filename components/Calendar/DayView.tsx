@@ -2,7 +2,7 @@ import { useView } from "@/context/ViewContext";
 import { FaChevronLeft } from "react-icons/fa6";
 import LoginButton from "../AuthForm/button";
 import { useMemo, useEffect, useRef } from "react";
-
+import { formatHour, formatCurrentTime } from "@/lib/Event";
 export default function DayView() {
   const { setView, calendar, activeDay, setActiveDay, activeWeek } = useView();
 
@@ -12,12 +12,6 @@ export default function DayView() {
 
   const currentHour = new Date().getHours();
   const currentMinutes = new Date().getMinutes();
-
-  const formatHour = (hour: number) => {
-    const ampm = hour >= 12 ? "PM" : "AM";
-    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
-    return `${formattedHour} ${ampm}`;
-  };
 
   useEffect(() => {
     if (hoursRef.current) {
@@ -30,12 +24,6 @@ export default function DayView() {
       }
     }
   }, [currentHour]);
-
-  const formatCurrentTime = (hour: number, minutes: number) => {
-    const ampm = hour >= 12 ? "PM" : "AM";
-    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
-    return `${formattedHour}:${minutes.toString().padStart(2, "0")} ${ampm}`;
-  };
 
   return (
     <div id="day-view">

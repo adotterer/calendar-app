@@ -10,6 +10,18 @@ export const convertForHoursMins = (time: string) => {
   return [hours, minutes];
 };
 
+export const formatCurrentTime = (hour: number, minutes: number) => {
+  const ampm = hour >= 12 ? "PM" : "AM";
+  const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+  return `${formattedHour}:${minutes.toString().padStart(2, "0")} ${ampm}`;
+};
+
+export const formatHour = (hour: number) => {
+  const ampm = hour >= 12 ? "PM" : "AM";
+  const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+  return `${formattedHour} ${ampm}`;
+};
+
 export class LocalEvent {
   name: string;
   calendarDays: string[];

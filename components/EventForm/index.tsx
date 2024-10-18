@@ -54,7 +54,6 @@ const CreateEventForm: React.FC<EventFormProps> = ({ currentDate }) => {
   const [guests, setGuests] = useState<string[]>(email ? [email] : []);
 
   useEffect(() => {
-    console.log(startDate, endDate, "?");
     if (new Date(endDate) < new Date(startDate)) {
       setEndDate(startDate);
     }

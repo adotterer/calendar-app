@@ -3,13 +3,19 @@ import {
   createContext,
   useContext,
   useState,
+  useMemo,
   ReactNode,
   Dispatch,
   SetStateAction,
   useEffect,
 } from "react";
+import { useAuth } from "@/context/AuthContext";
 import Calendar from "@/lib/Calendar";
+import { LocalEvent } from "@/lib/Event";
 
+type CalendarDayEvents = {
+  [day: number]: LocalEvent[];
+};
 interface ViewProviderProps {
   children: ReactNode;
 }
@@ -24,17 +30,36 @@ interface ViewContextType {
   activeDay: number;
   setActiveDay: Dispatch<SetStateAction<number>>;
   activeWeek: number[];
+  eventsForThisMonth: CalendarDayEvents;
 }
 
 const ViewContext = createContext<ViewContextType | undefined>(undefined);
 
 export const ViewProvider = ({ children }: ViewProviderProps) => {
   const today = new Date();
+  const { userEvents } = useAuth();
   const [view, setView] = useState<"month" | "day" | null>(null);
   const [activeDate, setActiveDate] = useState(today);
   const [calendar, setCalendar] = useState(new Calendar(today));
   const [activeDay, setActiveDay] = useState(today.getDate());
   const activeWeek = calendar.activeWeek(activeDay);
+
+  const eventsForThisMonth = useMemo(() => {
+    return userEvents.reduce<CalendarDayEvents>((acc, userEvent) => {
+      userEvent.calendarDays.forEach((curr) => {
+        const [year, month, day] = curr.split("-").map(Number);
+
+        if (calendar.year === year && calendar.mon === month) {
+          if (acc[day]) {
+            acc[day].push(userEvent);
+          } else {
+            acc[day] = [userEvent];
+          }
+        }
+      });
+      return acc;
+    }, {});
+  }, [calendar, userEvents]);
 
   useEffect(() => {
     const storedView = localStorage.getItem("current-view");
@@ -63,6 +88,7 @@ export const ViewProvider = ({ children }: ViewProviderProps) => {
         activeDay,
         setActiveDay,
         activeWeek,
+        eventsForThisMonth,
       }}
     >
       {children}

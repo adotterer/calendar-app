@@ -5,16 +5,9 @@ import { FaChevronLeft } from "react-icons/fa6";
 import Modal from "../Modal";
 import EventForm from "../EventForm";
 import LoginButton from "../AuthForm/button";
-import { useAuth } from "@/context/AuthContext";
 import { useView } from "@/context/ViewContext";
-import { LocalEvent } from "@/lib/Event";
-
-type CalendarDayEvents = {
-  [day: number]: LocalEvent[];
-};
 
 export default function MonthView() {
-  const { userEvents } = useAuth();
   const {
     setView,
     calendar,
@@ -22,6 +15,7 @@ export default function MonthView() {
     activeDay,
     setActiveDay,
     activeWeek,
+    eventsForThisMonth,
   } = useView();
 
   const [creatingEvent, setCreatingEvent] = useState(false);
@@ -66,23 +60,6 @@ export default function MonthView() {
       setActiveDay(calendar.numOfDaysInMonth);
     }
   }, [calendar, activeDay, setActiveDay]);
-
-  const eventsForThisMonth = useMemo(() => {
-    return userEvents.reduce<CalendarDayEvents>((acc, userEvent) => {
-      userEvent.calendarDays.forEach((curr) => {
-        const [year, month, day] = curr.split("-").map(Number);
-
-        if (calendar.year === year && calendar.mon === month) {
-          if (acc[day]) {
-            acc[day].push(userEvent);
-          } else {
-            acc[day] = [userEvent];
-          }
-        }
-      });
-      return acc;
-    }, {});
-  }, [calendar, userEvents]);
 
   const daysComponents = useMemo(() => {
     return daysArray.map(({ day, activeWeek, activeDay }) => {
