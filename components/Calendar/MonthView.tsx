@@ -84,7 +84,6 @@ export default function MonthView({
           {eventsForThisMonth[day]?.map((event) => (
             <div
               onClick={() => {
-                console.log("changing view");
                 setView("day");
               }}
               className="flex event-block cursor-pointer"

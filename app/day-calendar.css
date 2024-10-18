@@ -1,0 +1,65 @@
+#day-view {
+  width: 74vw;
+}
+
+.active-day-label {
+  border-bottom: 1px solid var(--border-accent-color);
+  padding: 10px;
+}
+.day-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin: 12px 0;
+}
+.day-weekdays > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.day-times {
+  margin-top: 30px;
+  max-height: 70vh;
+  padding-top: 20px;
+  overflow-y: scroll;
+}
+
+.day-times .hour {
+  height: 80px;
+  position: relative;
+
+  display: flex;
+  flex-direction: row;
+}
+
+.current-time-indicator {
+  position: absolute;
+  top: 0;
+  left: 0px;
+  right: 0;
+  height: 2px;
+  background-color: var(--active-color-light);
+}
+
+.current-time {
+  display: flex;
+}
+.current-time-label {
+  color: var(--active-color-light);
+  font-size: 0.8em;
+  width: 78px;
+  display: flex;
+}
+
+.hour-block {
+  width: 100%;
+  border-top: 1px solid white;
+}
+
+.day-times .hour-label {
+  height: 100%;
+  width: 80px;
+  display: flex;
+  justify-content: center;
+  margin-top: -10px;
+}
