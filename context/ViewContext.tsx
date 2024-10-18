@@ -33,6 +33,7 @@ export const ViewProvider = ({ children }: ViewProviderProps) => {
   const [calendar, setCalendar] = useState(new Calendar(new Date()));
   const [activeDay, setActiveDay] = useState(new Date().getDate());
   const activeWeek = calendar.activeWeek(activeDay);
+
   return (
     <ViewContext.Provider
       value={{

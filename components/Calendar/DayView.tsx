@@ -66,13 +66,16 @@ export default function DayView() {
       </div>
 
       <div className="day-weekdays">
-        <div>13</div>
+        {activeWeek.map((day) => {
+          return <div>{day}</div>;
+        })}
+        {/* <div>13</div>
         <div>14</div>
         <div>15</div>
         <div>16</div>
         <div>17</div>
         <div>18</div>
-        <div>19</div>
+        <div>19</div> */}
       </div>
 
       <div className="flex justify-center active-day-label">
