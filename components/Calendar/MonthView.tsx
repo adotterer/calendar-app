@@ -65,7 +65,7 @@ export default function MonthView() {
     if (activeDay > calendar.numOfDaysInMonth) {
       setActiveDay(calendar.numOfDaysInMonth);
     }
-  }, [calendar, activeDay]);
+  }, [calendar, activeDay, setActiveDay]);
 
   const eventsForThisMonth = useMemo(() => {
     return userEvents.reduce<CalendarDayEvents>((acc, userEvent) => {
@@ -125,7 +125,7 @@ export default function MonthView() {
         </div>
       );
     });
-  }, [eventsForThisMonth, activeWeek, activeDay, creatingEvent]);
+  }, [eventsForThisMonth, creatingEvent, setView, daysArray, setActiveDay]);
 
   return (
     <>

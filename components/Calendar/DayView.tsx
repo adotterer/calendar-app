@@ -4,14 +4,7 @@ import LoginButton from "../AuthForm/button";
 import { useMemo, useEffect, useRef } from "react";
 
 export default function DayView() {
-  const {
-    setView,
-    calendar,
-    setCalendar,
-    activeDay,
-    setActiveDay,
-    activeWeek,
-  } = useView();
+  const { setView, calendar, activeDay, setActiveDay, activeWeek } = useView();
 
   const hoursRef = useRef<HTMLDivElement>(null);
 
