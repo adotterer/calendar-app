@@ -31,8 +31,8 @@ export default function MonthView() {
     const highlightedDays: number[] = [];
 
     const isSequential = activeWeek.every((day, index) => {
-      if (index === 0) return true; 
-      return day === activeWeek[index - 1] + 1; 
+      if (index === 0) return true;
+      return day === activeWeek[index - 1] + 1;
     });
 
     if (!isSequential) {
@@ -106,6 +106,7 @@ export default function MonthView() {
             <div
               onClick={() => {
                 setView("day");
+                localStorage.setItem("current-day", "day");
               }}
               className="flex event-block cursor-pointer"
               key={event.name}

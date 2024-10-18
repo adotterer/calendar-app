@@ -6,6 +6,7 @@ import {
   ReactNode,
   Dispatch,
   SetStateAction,
+  useEffect,
 } from "react";
 import Calendar from "@/lib/Calendar";
 
@@ -28,11 +29,19 @@ interface ViewContextType {
 const ViewContext = createContext<ViewContextType | undefined>(undefined);
 
 export const ViewProvider = ({ children }: ViewProviderProps) => {
+  const today = new Date();
   const [view, setView] = useState<"month" | "day">("month");
-  const [activeDate, setActiveDate] = useState(new Date());
-  const [calendar, setCalendar] = useState(new Calendar(new Date()));
-  const [activeDay, setActiveDay] = useState(new Date().getDate());
+  const [activeDate, setActiveDate] = useState(today);
+  const [calendar, setCalendar] = useState(new Calendar(today));
+  const [activeDay, setActiveDay] = useState(today.getDate());
   const activeWeek = calendar.activeWeek(activeDay);
+
+  useEffect(() => {
+    setView(localStorage.getItem("current-view") as "month" | "day");
+  }, []);
+  //   useEffect(() => {
+  //     localStorage.setItem("current-view", view);
+  //   }, [view]);
 
   return (
     <ViewContext.Provider

@@ -14,6 +14,7 @@
   --inactive-day-color: #151515;
   --empty-day-color: #222222;
   --bg-color: #201c1c;
+  --bg-color-transparent: rgba(32, 28, 28, 0.8);
   --event-color: #313131;
   --border-accent-color: #606060;
 }

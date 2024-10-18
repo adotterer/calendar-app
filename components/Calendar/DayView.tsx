@@ -1,6 +1,7 @@
 import { useView } from "@/context/ViewContext";
 import { FaChevronLeft } from "react-icons/fa6";
-import { useState, useMemo, useEffect, useRef } from "react";
+import LoginButton from "../AuthForm/button";
+import { useMemo, useEffect, useRef } from "react";
 
 export default function DayView() {
   const {
@@ -45,14 +46,15 @@ export default function DayView() {
 
   return (
     <div id="day-view">
-      <nav>
+      <nav className="day-nav flex flex-row justify-between">
         <div
           onClick={() => setView("month")}
-          className="cursor-pointer flex items-center"
+          className="month-view-button cursor-pointer flex items-center"
         >
           <FaChevronLeft />
-          October
+          {calendar.month}
         </div>
+        <LoginButton />
       </nav>
 
       <div className="day-weekdays">
@@ -67,19 +69,23 @@ export default function DayView() {
 
       <div className="day-weekdays">
         {activeWeek.map((day) => {
-          return <div>{day}</div>;
+          return (
+            <div>
+              <span
+                onClick={() => setActiveDay(day)}
+                className={`${
+                  activeDay === day ? "day-active" : ""
+                } day-label cursor-pointer`}
+              >
+                {day}
+              </span>
+            </div>
+          );
         })}
-        {/* <div>13</div>
-        <div>14</div>
-        <div>15</div>
-        <div>16</div>
-        <div>17</div>
-        <div>18</div>
-        <div>19</div> */}
       </div>
 
       <div className="flex justify-center active-day-label">
-        Friday October 8, 2024
+        {calendar.month} {activeDay}, {calendar.year}
       </div>
 
       <div className="day-times" ref={hoursRef}>
