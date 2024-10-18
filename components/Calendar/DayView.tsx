@@ -1,14 +1,18 @@
 import { useView } from "@/context/ViewContext";
 import { FaChevronLeft } from "react-icons/fa6";
-import { useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 
-interface CalendarComponentProps {
-  date?: Date;
-}
+export default function DayView() {
+  const {
+    setView,
+    calendar,
+    setCalendar,
+    activeDay,
+    setActiveDay,
+    activeWeek,
+  } = useView();
 
-export default function DayView({ date = new Date() }: CalendarComponentProps) {
-  const { setView } = useView();
-  const hoursRef = useRef<HTMLDivElement>(null); // Reference to the scrollable container
+  const hoursRef = useRef<HTMLDivElement>(null);
 
   const hours = useMemo(() => Array.from({ length: 24 }, (_, i) => i), []);
 
@@ -76,7 +80,6 @@ export default function DayView({ date = new Date() }: CalendarComponentProps) {
       </div>
 
       <div className="day-times" ref={hoursRef}>
-        {/* Map over the hours array to dynamically create the hour blocks */}
         {hours.map((hour) => (
           <div key={hour} id={`hour-${hour}`} className="hour">
             <div className="hour-label">{formatHour(hour)}</div>
@@ -100,14 +103,7 @@ export default function DayView({ date = new Date() }: CalendarComponentProps) {
                       flexGrow: 1,
                     }}
                   />
-                  <div
-                    className="current-time-label"
-                    style={
-                      {
-                        // marginLeft: "10px",
-                      }
-                    }
-                  >
+                  <div className="current-time-label">
                     {formatCurrentTime(currentHour, currentMinutes)}
                   </div>
                 </div>

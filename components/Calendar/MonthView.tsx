@@ -10,25 +10,24 @@ import { useAuth } from "@/context/AuthContext";
 import { useView } from "@/context/ViewContext";
 import { LocalEvent } from "@/lib/Event";
 
-interface CalendarComponentProps {
-  date?: Date;
-}
-
 type CalendarDayEvents = {
   [day: number]: LocalEvent[];
 };
 
-export default function MonthView({
-  date = new Date(),
-}: CalendarComponentProps) {
+export default function MonthView() {
   const { userEvents } = useAuth();
-  const { setView } = useView();
-  const [calendar, setCalendar] = useState(new Calendar(date));
-  const [activeDay, setActiveDay] = useState(new Date().getDate());
+  const {
+    setView,
+    calendar,
+    setCalendar,
+    activeDay,
+    setActiveDay,
+    activeWeek,
+  } = useView();
+
   const [creatingEvent, setCreatingEvent] = useState(false);
   const [calendarModalOpen, setCalendarModalOpen] = useState(false);
 
-  const activeWeek = calendar.activeWeek(activeDay);
   const daysArray = Array.from(
     { length: calendar.numOfDaysInMonth },
     (_, i) => {
